@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  password    String
+  role        String   @default("user")
+  namaLengkap String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  pendaftaran Pendaftaran?
+}
+
+model Pendaftaran {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  namaLengkap   String
+  namaPanggilan String
+  ttl           String
+  jenisKelamin  String
+  alamat        String   @db.Text
+  agama         String
+
+  namaOrtu      String
+  noOrtu        String
+  noPribadi     String?
+
+  jurusan       String
+  asalSekolah   String
+  nisn          String
+  nik           String
+
+  status        String   @default("pending")
+  nilaiSeleksi  Float?
+  catatan       String?  @db.Text
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
