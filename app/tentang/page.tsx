@@ -4,44 +4,44 @@ import Footer from '@/components/layout/Footer';
 import { GraduationCap, Target, Eye, Award, Users } from 'lucide-react';
 
 /* ══════════════════════════════════════════
-   DATA PRESTASI + FOTO DUMMY
+   DATA PRESTASI 
 ══════════════════════════════════════════ */
 const PRESTASI = [
   {
     tahun: '2026',
     nama: 'JUARA 1 Ultimate Futsal Championship Sejabodetabek',
     kategori: 'Olahraga',
-    foto: 'https://placehold.co/600x400/1E3A5F/E8B84B?text=Futsal+Championship',
-  },
-  {
-    tahun: '2026',
-    nama: 'JUARA 1 Futsal Nation Region Depok',
-    kategori: 'Olahraga',
-    foto: 'https://placehold.co/600x400/1E3A5F/E8B84B?text=Futsal+Nation+Depok',
+    foto: '/images/futsalcn2.jpg',
   },
   {
     tahun: '2025',
+    nama: 'JUARA 1 Futsal Nation Region Depok',
+    kategori: 'Olahraga',
+    foto: '/images/futsalcn1.jpg',
+  },
+  {
+    tahun: '2026',
     nama: 'JUARA 1 BATTLE IN STYLE DANCE COMPETITION | GARENA YOUTH CHAMPIONSHIP',
     kategori: 'Seni',
-    foto: 'https://placehold.co/600x400/7C3AED/E8B84B?text=Dance+Competition',
+    foto: '/images/juaranusabeast.jpg',
   },
   {
     tahun: '2025',
     nama: 'JUARA 1 SEJABODETABEK TOURNAMEN ESPORT FREE FIRE PRAMBORS TOP COFFE GEN2ATION',
     kategori: 'Olahraga Elektronik',
-    foto: 'https://placehold.co/600x400/DC2626/E8B84B?text=Esport+Free+Fire',
+    foto: '/images/esport.jpg',
   },
   {
-    tahun: '2024',
-    nama: 'JUARA 1 MOBILE LEGENDS SMANLI CUP E-SPORT SE-JABODETABEK',
-    kategori: 'Olahraga Elektronik',
-    foto: 'https://placehold.co/600x400/DC2626/E8B84B?text=Mobile+Legends+Cup',
+    tahun: '2025',
+    nama: 'JUARA UMUM KOLAKARYA TINGKAT JABODETABEK ',
+    kategori: 'Seni',
+    foto: '/images/citter.jpg',
   },
   {
-    tahun: '2024',
-    nama: 'JUARA MULA 3 SEJABODETABEK | LPBB PASCHADA 2ND',
+    tahun: '2025',
+    nama: 'JUARA 1 TURNAMEN TAEWKONDO TINGKAT NASIONAL| MENDAGRI CUP 2025',
     kategori: 'Organisasi',
-    foto: 'https://placehold.co/600x400/0A1628/E8B84B?text=LPBB+PASCHADA',
+    foto: '/images/tekon.jpg',
   },
 ];
 
