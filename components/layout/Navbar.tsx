@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X, GraduationCap, ChevronDown } from 'lucide-react';
@@ -26,7 +27,7 @@ export default function Navbar() {
 
   return (
     <nav style={{ 
-      background: scrolled ? 'rgba(10,22,40,0.98)' : '#0A1628',
+      background: scrolled ? '#145A45' : '#0B3D2E',
       borderBottom: '2px solid #C8973A',
       position: 'sticky', top: 0, zIndex: 100,
       backdropFilter: 'blur(10px)',
@@ -38,19 +39,26 @@ export default function Navbar() {
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}>
             <div style={{
               width: 44, height: 44,
-              background: 'linear-gradient(135deg, #C8973A, #E8B84B)',
               borderRadius: 10,
-              display: 'flex', alignItems: 'center', justifyContent: 'center'
+              overflow: 'hidden',
+              position: 'relative',
             }}>
-              <GraduationCap size={24} color="#0A1628" />
+              <Image
+                src="/images/logo.png"
+                alt="Logo SMK Citra Negara"
+                width={44}
+                height={44}
+                style={{ objectFit: 'cover' }}
+              />
             </div>
             <div>
               <div style={{ color: 'white', fontWeight: 800, fontSize: 16, lineHeight: 1.2 }}>
                 SMK Citra Negara
               </div>
               <div style={{ color: '#C8973A', fontSize: 11, fontWeight: 500 }}>
-                Mencetak Generasi Profesional
+                Pilihan Tepat di Sekolah yang MANTAP
               </div>
+             
             </div>
           </Link>
 
