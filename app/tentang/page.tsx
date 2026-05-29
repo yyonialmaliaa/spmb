@@ -51,7 +51,7 @@ const PRESTASI = [
 function Box({ name, label, variant = 'default', wide = false }) {
   const styles = {
     default: { bg: 'white',                                    border: '#E2D9C8', nameColor: '#0A1628', labelColor: '#6B7280' },
-    dark:    { bg: '#0A1628',                                  border: '#C8973A', nameColor: 'white',   labelColor: '#C8973A' },
+    dark:    { bg: '#023d17',                                  border: '#C8973A', nameColor: 'white',   labelColor: '#C8973A' },
     gold:    { bg: 'linear-gradient(135deg,#C8973A,#E8B84B)', border: '#C8973A', nameColor: '#0A1628', labelColor: '#0A1628' },
     cream:   { bg: '#FAF7F0',                                  border: '#E2D9C8', nameColor: '#0A1628', labelColor: '#6B7280' },
   };
@@ -260,7 +260,7 @@ export default function TentangPage() {
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
               {[
-                { icon: Eye, title: 'Visi', color: '#0A1628', content: 'Terwujudnya Sekolah Kejujuran yang Religius, Disiplin dan Terampil Dalam Menyongsong Generasi Emas di Tahun 2045' },
+                { icon: Eye, title: 'Visi', color: '#023d17', content: 'Terwujudnya Sekolah Kejujuran yang Religius, Disiplin dan Terampil Dalam Menyongsong Generasi Emas di Tahun 2045' },
                 { icon: Target, title: 'Misi', color: '#C8973A', content: '1. Mewujudkan Insan yang taat beribadah, cinta kepada kitab suci dan pandai dalam dakwah keagamaan\n2. Mewujudkan peserta didik yang beperilaku baik, patuh, dan memiliki jiwa kepemimpinan\n3. Mewujudkan peserta didik yang ahli sesuai dengan kejuruannya, sinkronasi kurikulum intrakurikuler dengan ekstrakurikuler, dan pengembangan kerjasama dengan dunia industri' },
               ].map(item => (
                 <div key={item.title} style={{ background: item.color, borderRadius: 18, padding: 32 }}>

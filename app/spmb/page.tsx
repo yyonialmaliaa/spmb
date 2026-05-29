@@ -54,7 +54,7 @@ export default function SPMBPage() {
           <div style={{ maxWidth: 1100, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 48 }}>
               <div className="gold-line" style={{ margin: '0 auto 16px' }} />
-              <h2 className="font-display" style={{ fontSize: 36, color: '#0A1628' }}>Jadwal SPMB</h2>
+              <h2 className="font-display" style={{ fontSize: 36, color: '#000000' }}>Jadwal SPMB</h2>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 20 }}>
               {[
@@ -70,7 +70,7 @@ export default function SPMBPage() {
                     <Calendar size={16} color={item.status === 'open' ? '#C8973A' : '#C8973A'} />
                     {item.status === 'open' && <span style={{ background: '#C8973A', color: '#0A1628', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10 }}>BUKA</span>}
                   </div>
-                  <h4 style={{ fontSize: 14, fontWeight: 700, color: item.status === 'open' ? 'white' : '#0A1628', marginBottom: 6 }}>{item.fase}</h4>
+                  <h4 style={{ fontSize: 14, fontWeight: 700, color: item.status === 'open' ? 'white' : '#28250a', marginBottom: 6 }}>{item.fase}</h4>
                   <p style={{ fontSize: 12, color: item.status === 'open' ? '#E8B84B' : '#9CA3AF' }}>{item.tgl}</p>
                 </div>
               ))}
@@ -126,7 +126,7 @@ export default function SPMBPage() {
                 </p>
               </div>
             </div>
-            <div style={{ background: '#0A1628', borderRadius: 20, padding: 36, color: 'white' }}>
+            <div style={{ background: '#02513b', borderRadius: 20, padding: 36, color: 'white' }}>
               <h3 className="font-display" style={{ fontSize: 26, color: 'white', marginBottom: 8 }}>Mulai Daftar Sekarang</h3>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, lineHeight: 1.7, marginBottom: 28 }}>
                 Proses pendaftaran 100% online. Buat akun, isi formulir, dan upload berkas dari rumah.

@@ -143,7 +143,7 @@ export default function JurusanPage() {
         </section>
 
         {/* Total info */}
-        <section style={{ background: '#0A1628', padding: '28px 24px', borderBottom: '2px solid #C8973A' }}>
+        <section style={{ background: '#023d17', padding: '28px 24px', borderBottom: '2px solid #C8973A' }}>
           <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: 40, justifyContent: 'center', flexWrap: 'wrap' }}>
             {[
               { icon: Users, label: 'Total Kuota', val: '288 Siswa' },
@@ -271,7 +271,7 @@ export default function JurusanPage() {
         </section>
 
         {/* CTA */}
-        <section style={{ padding: '70px 24px', background: '#0A1628', textAlign: 'center' }}>
+        <section style={{ padding: '70px 24px', background: '#023d17', textAlign: 'center' }}>
           <div style={{ maxWidth: 600, margin: '0 auto' }}>
             <h2 className="font-display" style={{ color: 'white', fontSize: 38, marginBottom: 16 }}>Sudah Tentukan Pilihan?</h2>
             <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 16, lineHeight: 1.7, marginBottom: 32 }}>
