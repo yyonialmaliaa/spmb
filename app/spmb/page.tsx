@@ -65,9 +65,9 @@ export default function SPMBPage() {
                 { fase: 'Pengumuman Hasil', tgl: '25 Juli 2026', status: 'upcoming' },
                 { fase: 'Daftar Ulang', tgl: '26 – 31 Juli 2026', status: 'upcoming' },
               ].map((item, i) => (
-                <div key={i} style={{ background: item.status === 'open' ? '#0A1628' : 'white', border: `1.5px solid ${item.status === 'open' ? '#C8973A' : '#E5E7EB'}`, borderRadius: 14, padding: 22 }}>
+                <div key={i} style={{ background: item.status === 'open' ? 'rgb(7, 71, 15)' : 'white', border: `1.5px solid ${item.status === 'open' ? '#C8973A' : '#C8973A'}`, borderRadius: 14, padding: 22 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                    <Calendar size={16} color={item.status === 'open' ? '#C8973A' : '#9CA3AF'} />
+                    <Calendar size={16} color={item.status === 'open' ? '#C8973A' : '#C8973A'} />
                     {item.status === 'open' && <span style={{ background: '#C8973A', color: '#0A1628', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10 }}>BUKA</span>}
                   </div>
                   <h4 style={{ fontSize: 14, fontWeight: 700, color: item.status === 'open' ? 'white' : '#0A1628', marginBottom: 6 }}>{item.fase}</h4>

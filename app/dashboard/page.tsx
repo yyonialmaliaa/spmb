@@ -21,7 +21,7 @@ const STATUS_CONFIG = {
   pending:  { label: 'Menunggu Verifikasi', color: '#92400E', bg: '#FEF3C7', icon: Clock },
   verified: { label: 'Sedang Diverifikasi', color: '#1E40AF', bg: '#DBEAFE', icon: CheckCircle },
   diterima: { label: 'Diterima', color: '#065F46', bg: '#D1FAE5', icon: CheckCircle },
-  ditolak:  { label: 'Tidak Diterima', color: '#991B1B', bg: '#FEE2E2', icon: XCircle },
+  ditolak:  { label: 'Tidak Diterima', color: '#fefefe', bg: '#ff0000', icon: XCircle },
 };
 
 export default function DashboardPage() {
@@ -154,9 +154,9 @@ export default function DashboardPage() {
                 )}
 
                 {pendaftaran.nilaiSeleksi !== undefined && pendaftaran.nilaiSeleksi !== null && (
-                  <div style={{ background: pendaftaran.status === 'diterima' ? '#D1FAE5' : '#FEE2E2', borderRadius: 8, padding: 16, textAlign: 'center' }}>
-                    <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Nilai Seleksi</div>
-                    <div className="font-display" style={{ fontSize: 40, fontWeight: 700, color: pendaftaran.status === 'diterima' ? '#065F46' : '#991B1B' }}>
+                  <div style={{ background: pendaftaran.status === 'diterima' ? '#0bd43a' : '#ff0000', borderRadius: 8, padding: 16, textAlign: 'center' }}>
+                    <div style={{ fontSize: 12, color: '#ffffff', marginBottom: 4 }}>Nilai Seleksi</div>
+                    <div className="font-display" style={{ fontSize: 40, fontWeight: 700, color: pendaftaran.status === 'diterima' ? '#ffffff' : '#ffffff' }}>
                       {pendaftaran.nilaiSeleksi}
                     </div>
                   </div>

@@ -71,7 +71,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, data: pendaftaran })
   } catch (err) {
     console.error('Pendaftaran error:', err)
-    return NextResponse.json(
+    return NextResponse.json( 
       { error: 'Terjadi kesalahan server' },
       { status: 500 }
     )

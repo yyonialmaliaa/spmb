@@ -5,11 +5,12 @@ import Link from 'next/link';
 import { GraduationCap, ChevronRight, ChevronLeft, CheckCircle, AlertCircle } from 'lucide-react';
 
 const JURUSAN_OPTIONS = [
-  'Rekayasa Perangkat Lunak (RPL)',
-  'Teknik Komputer & Jaringan (TKJ)',
-  'Multimedia (MM)',
-  'Akuntansi (AK)',
-  'Administrasi Perkantoran (AP)',
+  'Pengembangan Perangkat lunak dan gim (PPLG)',
+  'Teknik Jaringan Komputer & Telkomunikasi (TJKT)',
+  'Desain Komunikasi Visual (DKV)',
+  'Managemen perkantoran & Layanan Bisnis (MPLB)',
+  'Pemasaran (PM)',
+  'Perhotelan (PH)',
 ];
 
 const AGAMA_OPTIONS = ['Islam', 'Kristen Protestan', 'Kristen Katolik', 'Hindu', 'Budha', 'Konghucu'];
