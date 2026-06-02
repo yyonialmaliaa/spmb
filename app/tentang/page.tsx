@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { GraduationCap, Target, Eye, Award, Users } from 'lucide-react';
@@ -241,9 +242,25 @@ export default function TentangPage() {
         {/* Hero */}
         <section className="hero-gradient" style={{ padding: '80px 24px' }}>
           <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
-            <div style={{ width: 80, height: 80, background: 'linear-gradient(135deg,#C8973A,#E8B84B)', borderRadius: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-              <GraduationCap size={40} color="#0A1628" />
-            </div>
+            <div className="flex justify-center mb-6">
+  <div
+    style={{
+      width: 200,
+      height: 200,
+      borderRadius: 10,
+      overflow: "hidden",
+      position: "relative",
+    }}
+  >
+    <Image
+      src="/images/logo.png"
+      alt="Logo SMK Citra Negara"
+      width={200}
+      height={200}
+      style={{ objectFit: "cover" }}
+    />
+  </div>
+</div>
             <h1 className="font-display" style={{ fontSize: 48, color: 'white', marginBottom: 16 }}>Tentang SMK Citra Negara</h1>
             <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 17, lineHeight: 1.7, maxWidth: 580, margin: '0 auto' }}>
               Berdiri sejak 2004, kami telah menjadi institusi pendidikan kejuruan terkemuka yang menghasilkan lulusan siap kerja dan berkarakter.

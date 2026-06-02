@@ -2,38 +2,71 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { GraduationCap, ChevronRight, ChevronLeft, CheckCircle, AlertCircle } from 'lucide-react';
+import { GraduationCap, ChevronRight, ChevronLeft, CheckCircle, AlertCircle, Upload, X, Loader } from 'lucide-react';
 
 const JURUSAN_OPTIONS = [
-  'Pengembangan Perangkat lunak dan gim (PPLG)',
-  'Teknik Jaringan Komputer & Telkomunikasi (TJKT)',
+  'Pengembangan Perangkat Lunak dan Gim (PPLG)',
+  'Teknik Jaringan Komputer & Telekomunikasi (TJKT)',
   'Desain Komunikasi Visual (DKV)',
-  'Managemen perkantoran & Layanan Bisnis (MPLB)',
+  'Manajemen Perkantoran & Layanan Bisnis (MPLB)',
   'Pemasaran (PM)',
   'Perhotelan (PH)',
 ];
 
 const AGAMA_OPTIONS = ['Islam', 'Kristen Protestan', 'Kristen Katolik', 'Hindu', 'Budha', 'Konghucu'];
+const GOLDAR_OPTIONS = ['A', 'B', 'AB', 'O', 'Tidak Tahu'];
+const SERAGAM_OPTIONS = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+const PENDIDIKAN_OPTIONS = ['SD/MI', 'SMP/MTs', 'SMA/SMK', 'D1', 'D2', 'D3', 'S1', 'S2', 'S3'];
+const STEPS = ['Ketentuan', 'Data Pribadi', 'Data Orang Tua', 'Data Akademik', 'Upload Berkas', 'Konfirmasi'];
 
 type FormData = {
-  namaLengkap: string; namaPanggilan: string; ttl: string;
-  jenisKelamin: string; alamat: string; agama: string;
-  namaOrtu: string; noOrtu: string; noPribadi: string;
-  jurusan: string; asalSekolah: string; nisn: string; nik: string;
+  namaLengkap: string; namaPanggilan: string;
+  tempatLahir: string; tanggalLahir: string;
+  jenisKelamin: string; agama: string; anakKe: string;
+  alamat: string; rt: string; rw: string;
+  kelurahan: string; kecamatan: string; kabupaten: string;
+  beratBadan: string; tinggiBadan: string; golonganDarah: string;
+  nisn: string; nik: string; noPribadi: string; ukuranSeragam: string;
+  namaPemberiReferensi: string; noHpReferensi: string;
+  asalSD: string; asalSMP: string; jurusan: string;
+  namaAyah: string; ttlAyah: string; pendidikanAyah: string; pekerjaanAyah: string; penghasilanAyah: string; noHpAyah: string; alamatAyah: string;
+  namaIbu: string; ttlIbu: string; pendidikanIbu: string; pekerjaanIbu: string; penghasilanIbu: string; noHpIbu: string; alamatIbu: string;
+  namaWali: string; ttlWali: string; pendidikanWali: string; pekerjaanWali: string; penghasilanWali: string; noHpWali: string; alamatWali: string;
 };
 
 const INITIAL: FormData = {
-  namaLengkap: '', namaPanggilan: '', ttl: '', jenisKelamin: '',
-  alamat: '', agama: '', namaOrtu: '', noOrtu: '', noPribadi: '',
-  jurusan: '', asalSekolah: '', nisn: '', nik: '',
+  namaLengkap: '', namaPanggilan: '', tempatLahir: '', tanggalLahir: '',
+  jenisKelamin: '', agama: '', anakKe: '', alamat: '', rt: '', rw: '',
+  kelurahan: '', kecamatan: '', kabupaten: '', beratBadan: '', tinggiBadan: '',
+  golonganDarah: '', nisn: '', nik: '', noPribadi: '', ukuranSeragam: '',
+  namaPemberiReferensi: '', noHpReferensi: '', asalSD: '', asalSMP: '', jurusan: '',
+  namaAyah: '', ttlAyah: '', pendidikanAyah: '', pekerjaanAyah: '', penghasilanAyah: '', noHpAyah: '', alamatAyah: '',
+  namaIbu: '', ttlIbu: '', pendidikanIbu: '', pekerjaanIbu: '', penghasilanIbu: '', noHpIbu: '', alamatIbu: '',
+  namaWali: '', ttlWali: '', pendidikanWali: '', pekerjaanWali: '', penghasilanWali: '', noHpWali: '', alamatWali: '',
 };
 
-const STEPS = ['Data Pribadi', 'Data Orang Tua', 'Data Akademik', 'Konfirmasi'];
+type FileItem = { file: File | null; path: string; uploading: boolean; error: string };
+type FilesState = { ijazah: FileItem; akte: FileItem; kk: FileItem; ktpOrtu: FileItem; kip: FileItem; foto: FileItem };
+const emptyFile = (): FileItem => ({ file: null, path: '', uploading: false, error: '' });
+
+const FILE_FIELDS = [
+  { key: 'ijazah' as keyof FilesState, label: 'Fotocopy Ijazah yang telah dilegalisir', required: true },
+  { key: 'akte' as keyof FilesState, label: 'Fotocopy Akte Kelahiran / Surat Keterangan Lahir', required: true },
+  { key: 'kk' as keyof FilesState, label: 'Fotocopy Kartu Keluarga', required: true },
+  { key: 'ktpOrtu' as keyof FilesState, label: 'Fotocopy KTP Ayah dan Ibu', required: true },
+  { key: 'kip' as keyof FilesState, label: 'Fotocopy Kartu KIP (Jika Ada)', required: false },
+  { key: 'foto' as keyof FilesState, label: 'Pas Photo Siswa Ukuran 3x4', required: true },
+];
 
 export default function DaftarPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormData>(INITIAL);
+  const [files, setFiles] = useState<FilesState>({
+    ijazah: emptyFile(), akte: emptyFile(), kk: emptyFile(),
+    ktpOrtu: emptyFile(), kip: emptyFile(), foto: emptyFile(),
+  });
+  const [setuju, setSetuju] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [authChecked, setAuthChecked] = useState(false);
@@ -44,12 +77,53 @@ export default function DaftarPage() {
       setAuthChecked(true);
     });
     fetch('/api/pendaftaran').then(r => r.json()).then(d => {
-      if (d.data) { router.push('/dashboard'); }
+      if (d.data) router.push('/dashboard');
     });
   }, [router]);
 
   const set = (k: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setForm(f => ({ ...f, [k]: e.target.value }));
+
+  const handleFileChange = async (key: keyof FilesState, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      setFiles(f => ({ ...f, [key]: { ...f[key], error: 'Ukuran file maksimal 2MB' } }));
+      return;
+    }
+    setFiles(f => ({ ...f, [key]: { file, path: '', uploading: true, error: '' } }));
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('fieldName', key);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) {
+        setFiles(f => ({ ...f, [key]: { file, path: '', uploading: false, error: data.error } }));
+        return;
+      }
+      setFiles(f => ({ ...f, [key]: { file, path: data.path, uploading: false, error: '' } }));
+    } catch {
+      setFiles(f => ({ ...f, [key]: { file, path: '', uploading: false, error: 'Gagal upload, coba lagi' } }));
+    }
+  };
+
+  const removeFile = (key: keyof FilesState) => setFiles(f => ({ ...f, [key]: emptyFile() }));
+
+  const handleNext = () => {
+    if (step === 0 && !setuju) { setError('Harap centang persetujuan ketentuan'); return; }
+    if (step === 1 && !form.namaLengkap) { setError('Nama lengkap wajib diisi'); return; }
+    if (step === 1 && !form.jurusan) { setError('Jurusan wajib dipilih'); return; }
+    if (step === 1 && !form.jenisKelamin) { setError('Jenis kelamin wajib dipilih'); return; }
+    if (step === 3 && !form.asalSMP) { setError('Asal SMP/MTs wajib diisi'); return; }
+    if (step === 4) {
+      const missing = FILE_FIELDS.filter(f => f.required && !files[f.key].path);
+      if (missing.length > 0) { setError(`File wajib belum diupload: ${missing.map(m => m.label.split(' ').slice(0,2).join(' ')).join(', ')}`); return; }
+      if (FILE_FIELDS.some(f => files[f.key].uploading)) { setError('Tunggu proses upload selesai'); return; }
+    }
+    setError('');
+    setStep(s => s + 1);
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -58,7 +132,19 @@ export default function DaftarPage() {
       const res = await fetch('/api/pendaftaran', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          ttl: `${form.tempatLahir}, ${form.tanggalLahir}`,
+          namaOrtu: form.namaAyah || form.namaIbu || form.namaWali,
+          noOrtu: form.noHpAyah || form.noHpIbu || form.noHpWali,
+          asalSekolah: form.asalSMP,
+          fileIjazah: files.ijazah.path || null,
+          fileAkte: files.akte.path || null,
+          fileKK: files.kk.path || null,
+          fileKtpOrtu: files.ktpOrtu.path || null,
+          fileKip: files.kip.path || null,
+          fileFoto: files.foto.path || null,
+        }),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error); setLoading(false); return; }
@@ -71,201 +157,286 @@ export default function DaftarPage() {
 
   if (!authChecked) return null;
 
-  const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '10px 14px',
-    border: '1.5px solid #D1D5DB', borderRadius: 8,
-    fontSize: 14, fontFamily: 'inherit', background: 'white', color: '#0A1628',
-    outline: 'none', transition: 'border-color 0.2s',
-  };
-  const labelStyle: React.CSSProperties = { fontSize: 13, fontWeight: 600, color: '#374151', display: 'block', marginBottom: 6 };
-  const gridStyle: React.CSSProperties = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 };
+  const inp: React.CSSProperties = { width: '100%', padding: '9px 12px', border: '1.5px solid #D1D5DB', borderRadius: 8, fontSize: 13, fontFamily: 'inherit', background: 'white', color: '#0A1628', outline: 'none' };
+  const lbl: React.CSSProperties = { fontSize: 12, fontWeight: 600, color: '#374151', display: 'block', marginBottom: 5 };
+  const grid2: React.CSSProperties = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 };
+  const grid3: React.CSSProperties = { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 };
+  const onFocus = (e: React.FocusEvent<any>) => (e.target.style.borderColor = '#C8973A');
+  const onBlur = (e: React.FocusEvent<any>) => (e.target.style.borderColor = '#D1D5DB');
 
   return (
     <div style={{ minHeight: '100vh', background: '#FAF7F0' }}>
-      {/* Header */}
       <header style={{ background: '#0A1628', borderBottom: '2px solid #C8973A', padding: '0 24px' }}>
-        <div style={{ maxWidth: 800, margin: '0 auto', display: 'flex', alignItems: 'center', height: 64 }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', alignItems: 'center', height: 64 }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
             <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#C8973A,#E8B84B)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <GraduationCap size={18} color="#0A1628" />
             </div>
-            <span style={{ color: 'white', fontWeight: 700, fontSize: 14 }}>Formulir SPMB 2026</span>
+            <span style={{ color: 'white', fontWeight: 700, fontSize: 14 }}>Formulir SPMB 2026 — SMK Citra Negara</span>
           </Link>
         </div>
       </header>
 
-      <main style={{ maxWidth: 800, margin: '0 auto', padding: '40px 24px' }}>
+      <main style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px' }}>
         {/* Steps */}
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 40 }}>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 32, overflowX: 'auto', paddingBottom: 4 }}>
           {STEPS.map((s, i) => (
-            <div key={s} style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-                <div style={{ width: 36, height: 36, borderRadius: '50%', background: i <= step ? 'linear-gradient(135deg,#C8973A,#E8B84B)' : '#E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 14, color: i <= step ? '#0A1628' : '#9CA3AF', marginBottom: 6 }}>
+            <div key={s} style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ width: 32, height: 32, borderRadius: '50%', background: i <= step ? 'linear-gradient(135deg,#C8973A,#E8B84B)' : '#E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 12, color: i <= step ? '#0A1628' : '#9CA3AF', marginBottom: 5 }}>
                   {i < step ? '✓' : i + 1}
                 </div>
-                <span style={{ fontSize: 11, fontWeight: i === step ? 700 : 400, color: i === step ? '#C8973A' : i < step ? '#0A1628' : '#9CA3AF', textAlign: 'center', whiteSpace: 'nowrap' }}>{s}</span>
+                <span style={{ fontSize: 10, fontWeight: i === step ? 700 : 400, color: i === step ? '#C8973A' : i < step ? '#0A1628' : '#9CA3AF', whiteSpace: 'nowrap' }}>{s}</span>
               </div>
-              {i < STEPS.length - 1 && <div style={{ height: 2, flex: 0.5, background: i < step ? '#C8973A' : '#E5E7EB', margin: '0 4px', marginBottom: 20 }} />}
+              {i < STEPS.length - 1 && <div style={{ width: 32, height: 2, background: i < step ? '#C8973A' : '#E5E7EB', margin: '0 4px', marginBottom: 18, flexShrink: 0 }} />}
             </div>
           ))}
         </div>
 
-        {/* Card */}
-        <div style={{ background: 'white', borderRadius: 20, padding: '36px 40px', boxShadow: '0 4px 30px rgba(10,22,40,0.08)', border: '1px solid #F0EBE0' }}>
-          
+        <div style={{ background: 'white', borderRadius: 20, padding: '32px 36px', boxShadow: '0 4px 30px rgba(10,22,40,0.08)', border: '1px solid #F0EBE0' }}>
           {error && (
-            <div style={{ background: '#FEE2E2', border: '1px solid #FECACA', borderRadius: 8, padding: '12px 16px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ background: '#FEE2E2', border: '1px solid #FECACA', borderRadius: 8, padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
               <AlertCircle size={16} color="#DC2626" />
               <span style={{ fontSize: 13, color: '#DC2626' }}>{error}</span>
             </div>
           )}
 
-          {/* Step 0: Data Pribadi */}
+          {/* STEP 0: KETENTUAN */}
           {step === 0 && (
             <div>
-              <h2 className="font-display" style={{ fontSize: 24, color: '#0A1628', marginBottom: 6 }}>Data Pribadi</h2>
-              <p style={{ color: '#6B7280', fontSize: 13, marginBottom: 28 }}>Isi data pribadi calon peserta didik</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-                <div style={gridStyle}>
-                  <div>
-                    <label style={labelStyle}>Nama Lengkap *</label>
-                    <input style={inputStyle} value={form.namaLengkap} onChange={set('namaLengkap')} placeholder="Sesuai akte/ijazah" onFocus={e => e.target.style.borderColor='#C8973A'} onBlur={e => e.target.style.borderColor='#D1D5DB'} />
+              <h2 className="font-display" style={{ fontSize: 22, color: '#0A1628', marginBottom: 6 }}>Ketentuan Pendaftaran</h2>
+              <p style={{ color: '#6B7280', fontSize: 13, marginBottom: 20 }}>Baca dan setujui ketentuan berikut sebelum melanjutkan</p>
+              <div style={{ background: '#F8F9FA', borderRadius: 12, padding: 24, marginBottom: 24, maxHeight: 380, overflowY: 'auto', border: '1px solid #E5E7EB' }}>
+                <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.8, marginBottom: 16 }}>Menyatakan bahwa saya sangat menyadari dalam penyelenggaraan pendidikan di sekolah swasta sangat membutuhkan dukungan besar dan partisipasinya dari orang tua/wali peserta didik, maka dari itu saya:</p>
+                {['Sepenuh hati mempercayakan kepada SMK Citra Negara untuk pendidikan, pengajaran dan pembinaan kepada anak kami.','Selama putra/putri saya menjadi peserta didik di SMK Citra Negara, saya mengizinkan untuk mengikuti seluruh agenda kegiatan.','Bersedia memenuhi kewajiban-kewajiban sebagai orang tua untuk kelancaran proses pendidikan yang dilaksanakan oleh SMK Citra Negara.','Bersedia dan sanggup memenuhi seluruh kewajiban atas pembayaran biaya pendidikan seperti: biaya PSB, SPP, biaya Ujian, Praktek Kerja Industri, kegiatan akhir tahun dan lain-lain.','Bersedia memenuhi seluruh biaya pendidikan secara tepat waktu demi kelancaran dan kesuksesan seluruh kegiatan di SMK Citra Negara.','Menyetujui jika kewajiban keuangan sekolah belum dilunasi, maka belum berhak atas administrasi penilaian anak saya.','Menyetujui apabila putra/putri saya membatalkan sekolah, maka seluruh biaya yang telah dibayarkan tidak dapat ditarik kembali.','Pembayaran administrasi PPDB harus lunas per gelombang.','Menerima peraturan bahwa selama masih mengangsur biaya PSB statusnya cadangan.'].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 10, alignItems: 'flex-start' }}>
+                    <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#0A1628', color: 'white', fontSize: 10, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>{i + 1}</div>
+                    <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.7, margin: 0 }}>{item}</p>
                   </div>
-                  <div>
-                    <label style={labelStyle}>Nama Panggilan *</label>
-                    <input style={inputStyle} value={form.namaPanggilan} onChange={set('namaPanggilan')} placeholder="Nama sehari-hari" onFocus={e => e.target.style.borderColor='#C8973A'} onBlur={e => e.target.style.borderColor='#D1D5DB'} />
-                  </div>
+                ))}
+              </div>
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: 12, cursor: 'pointer', padding: '14px 16px', background: setuju ? '#F0FDF4' : '#FFFBEB', borderRadius: 10, border: `1.5px solid ${setuju ? '#86EFAC' : '#FDE68A'}` }}>
+                <input type="checkbox" checked={setuju} onChange={e => setSetuju(e.target.checked)} style={{ width: 18, height: 18, marginTop: 1, accentColor: '#C8973A' }} />
+                <span style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>Saya telah membaca, memahami, dan <strong>menyetujui</strong> seluruh ketentuan pendaftaran di atas.</span>
+              </label>
+            </div>
+          )}
+
+          {/* STEP 1: DATA PRIBADI */}
+          {step === 1 && (
+            <div>
+              <h2 className="font-display" style={{ fontSize: 22, color: '#0A1628', marginBottom: 6 }}>Data Pribadi</h2>
+              <p style={{ color: '#6B7280', fontSize: 13, marginBottom: 24 }}>Isi data pribadi calon peserta didik dengan lengkap</p>
+              <div style={{ marginBottom: 16 }}>
+                <label style={lbl}>Jurusan yang Dipilih *</label>
+                <select style={inp} value={form.jurusan} onChange={set('jurusan')} onFocus={onFocus} onBlur={onBlur}>
+                  <option value="">Pilih jurusan...</option>
+                  {JURUSAN_OPTIONS.map(j => <option key={j}>{j}</option>)}
+                </select>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div style={grid2}>
+                  <div><label style={lbl}>Nama Lengkap *</label><input style={inp} value={form.namaLengkap} onChange={set('namaLengkap')} placeholder="Sesuai akte/ijazah" onFocus={onFocus} onBlur={onBlur} /></div>
+                  <div><label style={lbl}>Nama Panggilan</label><input style={inp} value={form.namaPanggilan} onChange={set('namaPanggilan')} placeholder="Nama sehari-hari" onFocus={onFocus} onBlur={onBlur} /></div>
                 </div>
-                <div>
-                  <label style={labelStyle}>Tempat, Tanggal Lahir *</label>
-                  <input style={inputStyle} value={form.ttl} onChange={set('ttl')} placeholder="Contoh: Jakarta, 15 Januari 2010" onFocus={e => e.target.style.borderColor='#C8973A'} onBlur={e => e.target.style.borderColor='#D1D5DB'} />
+                <div style={grid2}>
+                  <div><label style={lbl}>NISN</label><input style={inp} value={form.nisn} onChange={set('nisn')} placeholder="10 digit NISN" maxLength={10} onFocus={onFocus} onBlur={onBlur} /></div>
+                  <div><label style={lbl}>No. HP Pribadi</label><input style={inp} type="tel" value={form.noPribadi} onChange={set('noPribadi')} placeholder="08xxxxxxxxxx" onFocus={onFocus} onBlur={onBlur} /></div>
                 </div>
-                <div style={gridStyle}>
-                  <div>
-                    <label style={labelStyle}>Jenis Kelamin *</label>
-                    <select style={inputStyle} value={form.jenisKelamin} onChange={set('jenisKelamin')}>
-                      <option value="">Pilih...</option>
-                      <option>Laki-laki</option>
-                      <option>Perempuan</option>
+                <div style={grid2}>
+                  <div><label style={lbl}>Jenis Kelamin *</label>
+                    <select style={inp} value={form.jenisKelamin} onChange={set('jenisKelamin')} onFocus={onFocus} onBlur={onBlur}>
+                      <option value="">Pilih...</option><option>Laki-laki</option><option>Perempuan</option>
                     </select>
                   </div>
-                  <div>
-                    <label style={labelStyle}>Agama *</label>
-                    <select style={inputStyle} value={form.agama} onChange={set('agama')}>
+                  <div><label style={lbl}>Agama *</label>
+                    <select style={inp} value={form.agama} onChange={set('agama')} onFocus={onFocus} onBlur={onBlur}>
                       <option value="">Pilih...</option>
                       {AGAMA_OPTIONS.map(a => <option key={a}>{a}</option>)}
                     </select>
                   </div>
                 </div>
-                <div>
-                  <label style={labelStyle}>Alamat Lengkap *</label>
-                  <textarea style={{ ...inputStyle, minHeight: 80, resize: 'vertical' }} value={form.alamat} onChange={set('alamat')} placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota" onFocus={e => (e.target as HTMLTextAreaElement).style.borderColor='#C8973A'} onBlur={e => (e.target as HTMLTextAreaElement).style.borderColor='#D1D5DB'} />
+                <div style={grid2}>
+                  <div><label style={lbl}>Tempat Lahir *</label><input style={inp} value={form.tempatLahir} onChange={set('tempatLahir')} placeholder="Kota tempat lahir" onFocus={onFocus} onBlur={onBlur} /></div>
+                  <div><label style={lbl}>Tanggal Lahir *</label><input style={inp} type="date" value={form.tanggalLahir} onChange={set('tanggalLahir')} onFocus={onFocus} onBlur={onBlur} /></div>
+                </div>
+                <div style={grid3}>
+                  <div><label style={lbl}>Anak Ke-</label><input style={inp} type="number" value={form.anakKe} onChange={set('anakKe')} placeholder="1" onFocus={onFocus} onBlur={onBlur} /></div>
+                  <div><label style={lbl}>NIK</label><input style={inp} value={form.nik} onChange={set('nik')} placeholder="16 digit NIK" maxLength={16} onFocus={onFocus} onBlur={onBlur} /></div>
+                  <div><label style={lbl}>Ukuran Seragam</label>
+                    <select style={inp} value={form.ukuranSeragam} onChange={set('ukuranSeragam')} onFocus={onFocus} onBlur={onBlur}>
+                      <option value="">Pilih...</option>{SERAGAM_OPTIONS.map(s => <option key={s}>{s}</option>)}
+                    </select>
+                  </div>
+                </div>
+                <div><label style={lbl}>Alamat *</label><input style={inp} value={form.alamat} onChange={set('alamat')} placeholder="Nama jalan dan nomor" onFocus={onFocus} onBlur={onBlur} /></div>
+                <div style={grid3}>
+                  <div><label style={lbl}>RT</label><input style={inp} value={form.rt} onChange={set('rt')} placeholder="001" onFocus={onFocus} onBlur={onBlur} /></div>
+                  <div><label style={lbl}>RW</label><input style={inp} value={form.rw} onChange={set('rw')} placeholder="001" onFocus={onFocus} onBlur={onBlur} /></div>
+                  <div><label style={lbl}>Kelurahan</label><input style={inp} value={form.kelurahan} onChange={set('kelurahan')} placeholder="Kelurahan" onFocus={onFocus} onBlur={onBlur} /></div>
+                </div>
+                <div style={grid2}>
+                  <div><label style={lbl}>Kecamatan</label><input style={inp} value={form.kecamatan} onChange={set('kecamatan')} placeholder="Kecamatan" onFocus={onFocus} onBlur={onBlur} /></div>
+                  <div><label style={lbl}>Kabupaten / Kota</label><input style={inp} value={form.kabupaten} onChange={set('kabupaten')} placeholder="Kabupaten/Kota" onFocus={onFocus} onBlur={onBlur} /></div>
+                </div>
+                <div style={grid3}>
+                  <div><label style={lbl}>Berat Badan (kg)</label><input style={inp} type="number" value={form.beratBadan} onChange={set('beratBadan')} placeholder="Kg" onFocus={onFocus} onBlur={onBlur} /></div>
+                  <div><label style={lbl}>Tinggi Badan (cm)</label><input style={inp} type="number" value={form.tinggiBadan} onChange={set('tinggiBadan')} placeholder="Cm" onFocus={onFocus} onBlur={onBlur} /></div>
+                  <div><label style={lbl}>Golongan Darah</label>
+                    <select style={inp} value={form.golonganDarah} onChange={set('golonganDarah')} onFocus={onFocus} onBlur={onBlur}>
+                      <option value="">Pilih...</option>{GOLDAR_OPTIONS.map(g => <option key={g}>{g}</option>)}
+                    </select>
+                  </div>
+                </div>
+                <div style={{ borderTop: '1px solid #F3F4F6', paddingTop: 14 }}>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: '#0A1628', marginBottom: 12 }}>Referensi Pendaftaran <span style={{ fontWeight: 400, color: '#9CA3AF' }}>(opsional)</span></p>
+                  <div style={grid2}>
+                    <div><label style={lbl}>Nama Pemberi Referensi</label><input style={inp} value={form.namaPemberiReferensi} onChange={set('namaPemberiReferensi')} placeholder="Nama" onFocus={onFocus} onBlur={onBlur} /></div>
+                    <div><label style={lbl}>No. HP Referensi</label><input style={inp} type="tel" value={form.noHpReferensi} onChange={set('noHpReferensi')} placeholder="08xxxxxxxxxx" onFocus={onFocus} onBlur={onBlur} /></div>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Step 1: Data Ortu */}
-          {step === 1 && (
-            <div>
-              <h2 className="font-display" style={{ fontSize: 24, color: '#0A1628', marginBottom: 6 }}>Data Orang Tua/Wali</h2>
-              <p style={{ color: '#6B7280', fontSize: 13, marginBottom: 28 }}>Isi data orang tua atau wali calon peserta</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-                <div>
-                  <label style={labelStyle}>Nama Orang Tua/Wali *</label>
-                  <input style={inputStyle} value={form.namaOrtu} onChange={set('namaOrtu')} placeholder="Nama lengkap orang tua/wali" onFocus={e => e.target.style.borderColor='#C8973A'} onBlur={e => e.target.style.borderColor='#D1D5DB'} />
-                </div>
-                <div style={gridStyle}>
-                  <div>
-                    <label style={labelStyle}>No. HP Orang Tua *</label>
-                    <input style={inputStyle} type="tel" value={form.noOrtu} onChange={set('noOrtu')} placeholder="08xxxxxxxxxx" onFocus={e => e.target.style.borderColor='#C8973A'} onBlur={e => e.target.style.borderColor='#D1D5DB'} />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>No. HP Pribadi</label>
-                    <input style={inputStyle} type="tel" value={form.noPribadi} onChange={set('noPribadi')} placeholder="08xxxxxxxxxx (opsional)" onFocus={e => e.target.style.borderColor='#C8973A'} onBlur={e => e.target.style.borderColor='#D1D5DB'} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Step 2: Data Akademik */}
+          {/* STEP 2: DATA ORANG TUA */}
           {step === 2 && (
             <div>
-              <h2 className="font-display" style={{ fontSize: 24, color: '#0A1628', marginBottom: 6 }}>Data Akademik</h2>
-              <p style={{ color: '#6B7280', fontSize: 13, marginBottom: 28 }}>Informasi sekolah asal dan pilihan jurusan</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-                <div>
-                  <label style={labelStyle}>Jurusan yang Dipilih *</label>
-                  <select style={inputStyle} value={form.jurusan} onChange={set('jurusan')}>
-                    <option value="">Pilih jurusan...</option>
-                    {JURUSAN_OPTIONS.map(j => <option key={j}>{j}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label style={labelStyle}>Asal Sekolah *</label>
-                  <input style={inputStyle} value={form.asalSekolah} onChange={set('asalSekolah')} placeholder="Nama SMP/MTs asal" onFocus={e => e.target.style.borderColor='#C8973A'} onBlur={e => e.target.style.borderColor='#D1D5DB'} />
-                </div>
-                <div style={gridStyle}>
-                  <div>
-                    <label style={labelStyle}>NISN *</label>
-                    <input style={inputStyle} value={form.nisn} onChange={set('nisn')} placeholder="10 digit NISN" maxLength={10} onFocus={e => e.target.style.borderColor='#C8973A'} onBlur={e => e.target.style.borderColor='#D1D5DB'} />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>NIK *</label>
-                    <input style={inputStyle} value={form.nik} onChange={set('nik')} placeholder="16 digit NIK" maxLength={16} onFocus={e => e.target.style.borderColor='#C8973A'} onBlur={e => e.target.style.borderColor='#D1D5DB'} />
-                  </div>
-                </div>
+              <h2 className="font-display" style={{ fontSize: 22, color: '#0A1628', marginBottom: 6 }}>Data Orang Tua Kandung / Wali</h2>
+              <p style={{ color: '#6B7280', fontSize: 13, marginBottom: 24 }}>Isi data orang tua atau wali calon peserta didik</p>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
+                  <thead>
+                    <tr>
+                      <th style={{ padding: '10px 12px', background: '#F8F9FA', border: '1px solid #E5E7EB', fontSize: 12, fontWeight: 700, color: '#374151', textAlign: 'left', width: 150 }}>Data</th>
+                      {['Ayah','Ibu','Wali'].map(col => (
+                        <th key={col} style={{ padding: '10px 12px', background: col==='Ayah'?'#EFF6FF':col==='Ibu'?'#FDF2F8':'#F0FDF4', border: '1px solid #E5E7EB', fontSize: 12, fontWeight: 700, color: '#374151', textAlign: 'center' }}>{col}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { label:'Nama', keys:['namaAyah','namaIbu','namaWali'] as const, ph:'Nama lengkap' },
+                      { label:'Tempat, Tgl Lahir', keys:['ttlAyah','ttlIbu','ttlWali'] as const, ph:'Bandung, 17 Juni 1980' },
+                      { label:'Pendidikan', keys:['pendidikanAyah','pendidikanIbu','pendidikanWali'] as const, ph:'S1', isSelect:true },
+                      { label:'Pekerjaan', keys:['pekerjaanAyah','pekerjaanIbu','pekerjaanWali'] as const, ph:'Pekerjaan' },
+                      { label:'Penghasilan/bulan', keys:['penghasilanAyah','penghasilanIbu','penghasilanWali'] as const, ph:'Rp' },
+                      { label:'No. Handphone', keys:['noHpAyah','noHpIbu','noHpWali'] as const, ph:'08xx' },
+                      { label:'Alamat', keys:['alamatAyah','alamatIbu','alamatWali'] as const, ph:'Alamat' },
+                    ].map(row => (
+                      <tr key={row.label}>
+                        <td style={{ padding:'7px 12px', border:'1px solid #E5E7EB', fontSize:12, fontWeight:600, color:'#374151', background:'#FAFAFA' }}>{row.label}</td>
+                        {row.keys.map(k => (
+                          <td key={k} style={{ padding:'5px 7px', border:'1px solid #E5E7EB' }}>
+                            {row.isSelect ? (
+                              <select style={{ ...inp, fontSize:12 }} value={form[k]} onChange={set(k)} onFocus={onFocus} onBlur={onBlur}>
+                                <option value="">Pilih...</option>
+                                {PENDIDIKAN_OPTIONS.map(p => <option key={p}>{p}</option>)}
+                              </select>
+                            ) : (
+                              <input style={{ ...inp, fontSize:12 }} value={form[k]} onChange={set(k)} placeholder={row.ph} onFocus={onFocus} onBlur={onBlur} />
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 3: DATA AKADEMIK */}
+          {step === 3 && (
+            <div>
+              <h2 className="font-display" style={{ fontSize: 22, color: '#0A1628', marginBottom: 6 }}>Data Akademik</h2>
+              <p style={{ color: '#6B7280', fontSize: 13, marginBottom: 24 }}>Informasi riwayat pendidikan sebelumnya</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div><label style={lbl}>Asal SD/MI</label><input style={inp} value={form.asalSD} onChange={set('asalSD')} placeholder="Nama SD/MI asal" onFocus={onFocus} onBlur={onBlur} /></div>
+                <div><label style={lbl}>Asal SMP/MTs *</label><input style={inp} value={form.asalSMP} onChange={set('asalSMP')} placeholder="Nama SMP/MTs asal" onFocus={onFocus} onBlur={onBlur} /></div>
                 <div style={{ background: '#F0F9FF', borderRadius: 8, padding: 14, border: '1px solid #BAE6FD' }}>
-                  <p style={{ fontSize: 12, color: '#0369A1', lineHeight: 1.6 }}>
-                    💡 Upload berkas fisik (ijazah, KK, akte, pas foto) dapat dilakukan setelah submit formulir ini, langsung ke kantor sekolah dalam 3 hari kerja.
-                  </p>
+                  <p style={{ fontSize: 12, color: '#0369A1', lineHeight: 1.6 }}>💡 Upload berkas fisik akan dilakukan di langkah berikutnya. Berkas asli harap dibawa ke sekolah dalam 3 hari kerja.</p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Step 3: Konfirmasi */}
-          {step === 3 && (
+          {/* STEP 4: UPLOAD BERKAS */}
+          {step === 4 && (
             <div>
-              <h2 className="font-display" style={{ fontSize: 24, color: '#0A1628', marginBottom: 6 }}>Konfirmasi Data</h2>
-              <p style={{ color: '#6B7280', fontSize: 13, marginBottom: 28 }}>Periksa kembali data Anda sebelum mengirim</p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
-                {[
-                  { label: 'Nama Lengkap', val: form.namaLengkap },
-                  { label: 'Nama Panggilan', val: form.namaPanggilan },
-                  { label: 'TTL', val: form.ttl },
-                  { label: 'Jenis Kelamin', val: form.jenisKelamin },
-                  { label: 'Agama', val: form.agama },
-                  { label: 'Jurusan', val: form.jurusan },
-                  { label: 'Asal Sekolah', val: form.asalSekolah },
-                  { label: 'NISN', val: form.nisn },
-                  { label: 'NIK', val: form.nik },
-                  { label: 'Nama Ortu', val: form.namaOrtu },
-                  { label: 'No. HP Ortu', val: form.noOrtu },
-                  { label: 'Alamat', val: form.alamat },
-                ].map(({ label, val }) => (
-                  <div key={label} style={{ background: '#FAFAFA', borderRadius: 8, padding: '10px 14px' }}>
-                    <div style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 600, marginBottom: 3 }}>{label}</div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: val ? '#0A1628' : '#EF4444' }}>{val || '⚠ Belum diisi'}</div>
-                  </div>
-                ))}
+              <h2 className="font-display" style={{ fontSize: 22, color: '#0A1628', marginBottom: 6 }}>Upload Berkas Persyaratan</h2>
+              <p style={{ color: '#6B7280', fontSize: 13, marginBottom: 24 }}>Upload scan/foto dokumen (JPG/PNG/PDF, maks. 2MB per file)</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {FILE_FIELDS.map(item => {
+                  const f = files[item.key];
+                  const isUploaded = !!f.path;
+                  const isUploading = f.uploading;
+                  return (
+                    <div key={item.key} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', background: isUploaded ? '#F0FDF4' : f.error ? '#FFF1F2' : '#FAFAFA', borderRadius: 12, border: `1.5px solid ${isUploaded ? '#86EFAC' : f.error ? '#FECDD3' : '#E5E7EB'}` }}>
+                      <div style={{ width: 36, height: 36, borderRadius: '50%', background: isUploaded ? '#DCFCE7' : isUploading ? '#DBEAFE' : '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        {isUploading ? <Loader size={16} color="#3B82F6" /> : isUploaded ? <CheckCircle size={16} color="#16A34A" /> : <Upload size={16} color="#9CA3AF" />}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: '#374151' }}>{item.label}{item.required && <span style={{ color: '#EF4444', marginLeft: 4 }}>*</span>}</div>
+                        {isUploaded && <div style={{ fontSize: 11, color: '#16A34A', marginTop: 2 }}>✓ {f.file?.name} — Berhasil diupload</div>}
+                        {isUploading && <div style={{ fontSize: 11, color: '#3B82F6', marginTop: 2 }}>Mengupload ke server...</div>}
+                        {f.error && <div style={{ fontSize: 11, color: '#DC2626', marginTop: 2 }}>✗ {f.error}</div>}
+                        {!isUploaded && !isUploading && !f.error && <div style={{ fontSize: 11, color: '#9CA3AF', marginTop: 2 }}>JPG, PNG, atau PDF — maks. 2MB</div>}
+                      </div>
+                      {!isUploaded ? (
+                        <label style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0A1628', color: 'white', padding: '8px 16px', borderRadius: 8, cursor: isUploading ? 'not-allowed' : 'pointer', fontSize: 12, fontWeight: 600, flexShrink: 0, opacity: isUploading ? 0.6 : 1 }}>
+                          <Upload size={13} /> Browse
+                          <input type="file" accept=".jpg,.jpeg,.png,.pdf" onChange={e => handleFileChange(item.key, e)} disabled={isUploading} style={{ display: 'none' }} />
+                        </label>
+                      ) : (
+                        <button onClick={() => removeFile(item.key)} style={{ background: '#FEE2E2', border: 'none', borderRadius: 8, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', fontSize: 12, color: '#DC2626', fontWeight: 600, fontFamily: 'inherit' }}>
+                          <X size={13} /> Hapus
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-              <div style={{ background: '#FEF3C7', border: '1px solid #FDE68A', borderRadius: 10, padding: 16, marginBottom: 16 }}>
-                <p style={{ fontSize: 13, color: '#92400E', lineHeight: 1.6 }}>
-                  ✓ Dengan menekan tombol "Kirim Pendaftaran", saya menyatakan bahwa semua data yang diisikan adalah benar dan dapat dipertanggungjawabkan.
-                </p>
+              <p style={{ fontSize: 11, color: '#9CA3AF', marginTop: 14 }}>* Wajib diisi — File tersimpan aman di server sekolah</p>
+            </div>
+          )}
+
+          {/* STEP 5: KONFIRMASI */}
+          {step === 5 && (
+            <div>
+              <h2 className="font-display" style={{ fontSize: 22, color: '#0A1628', marginBottom: 6 }}>Konfirmasi Data</h2>
+              <p style={{ color: '#6B7280', fontSize: 13, marginBottom: 24 }}>Periksa kembali semua data sebelum mengirim</p>
+              {[
+                { title: 'Data Pribadi', items: [['Nama Lengkap',form.namaLengkap],['Nama Panggilan',form.namaPanggilan],['Tempat Lahir',form.tempatLahir],['Tanggal Lahir',form.tanggalLahir],['Jenis Kelamin',form.jenisKelamin],['Agama',form.agama],['NIK',form.nik],['NISN',form.nisn],['Alamat',`${form.alamat}, RT ${form.rt}/RW ${form.rw}`],['Kecamatan',form.kecamatan],['Kab/Kota',form.kabupaten]] },
+                { title: 'Data Akademik', items: [['Jurusan',form.jurusan],['Asal SD',form.asalSD],['Asal SMP',form.asalSMP]] },
+                { title: 'Data Orang Tua', items: [['Nama Ayah',form.namaAyah],['Pekerjaan Ayah',form.pekerjaanAyah],['Nama Ibu',form.namaIbu],['Pekerjaan Ibu',form.pekerjaanIbu],['No. HP Ortu',form.noHpAyah||form.noHpIbu]] },
+                { title: 'Berkas Upload', items: FILE_FIELDS.map((f, i) => [`${i+1}. ${f.label.split(' ').slice(1,3).join(' ')}`, files[f.key].path ? '✓ Sudah diupload' : f.required ? '✗ Belum diupload' : '— (opsional)']) },
+              ].map(section => (
+                <div key={section.title} style={{ marginBottom: 20 }}>
+                  <h4 style={{ fontSize: 11, fontWeight: 700, color: '#C8973A', letterSpacing: 1, marginBottom: 10 }}>{section.title.toUpperCase()}</h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                    {section.items.map(([label, val], idx) => (
+                        <div key={`${section.title}-${idx}`} style={{ background: '#FAFAFA', borderRadius: 8, padding: '8px 12px' }}>
+                        <div style={{ fontSize: 10, color: '#9CA3AF', fontWeight: 600, marginBottom: 2 }}>{label}</div>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: String(val).startsWith('✗') ? '#EF4444' : String(val).startsWith('✓') ? '#16A34A' : val ? '#0A1628' : '#EF4444' }}>{val || '⚠ Belum diisi'}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <div style={{ background: '#FEF3C7', border: '1px solid #FDE68A', borderRadius: 10, padding: 14 }}>
+                <p style={{ fontSize: 12, color: '#92400E', lineHeight: 1.6 }}>✓ Dengan menekan tombol <strong>"Kirim Pendaftaran"</strong>, saya menyatakan bahwa semua data yang diisikan adalah benar dan dapat dipertanggungjawabkan.</p>
               </div>
             </div>
           )}
 
           {/* Navigation */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 32, paddingTop: 24, borderTop: '1px solid #F3F4F6' }}>
-            <button onClick={() => setStep(s => s - 1)} disabled={step === 0} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'transparent', border: '1.5px solid #E5E7EB', color: step === 0 ? '#9CA3AF' : '#374151', padding: '11px 24px', borderRadius: 8, cursor: step === 0 ? 'not-allowed' : 'pointer', fontSize: 14, fontWeight: 600, fontFamily: 'inherit' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 28, paddingTop: 20, borderTop: '1px solid #F3F4F6' }}>
+            <button onClick={() => { setError(''); setStep(s => s - 1); }} disabled={step === 0} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'transparent', border: '1.5px solid #E5E7EB', color: step === 0 ? '#9CA3AF' : '#374151', padding: '10px 22px', borderRadius: 8, cursor: step === 0 ? 'not-allowed' : 'pointer', fontSize: 14, fontWeight: 600, fontFamily: 'inherit' }}>
               <ChevronLeft size={16} /> Sebelumnya
             </button>
-            {step < 3 ? (
-              <button onClick={() => setStep(s => s + 1)} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14 }}>
+            {step < 5 ? (
+              <button onClick={handleNext} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14 }}>
                 Selanjutnya <ChevronRight size={16} />
               </button>
             ) : (

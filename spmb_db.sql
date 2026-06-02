@@ -55,8 +55,8 @@ CREATE TABLE `pendaftaran` (
 --
 
 INSERT INTO `pendaftaran` (`id`, `userId`, `namaLengkap`, `namaPanggilan`, `ttl`, `jenisKelamin`, `alamat`, `agama`, `namaOrtu`, `noOrtu`, `noPribadi`, `jurusan`, `asalSekolah`, `nisn`, `nik`, `status`, `nilaiSeleksi`, `catatan`, `createdAt`, `updatedAt`) VALUES
-('cmplwbyzr0003ug5odbd8vdkx', 'cmplw9m1y0001ug5ojwckxfjw', 'contoh', 'contoh', '15 januari 2010', 'Perempuan', 'jl. apa aja dulu', 'Islam', 'contoh', '012345678', '012345678', 'Rekayasa Perangkat Lunak (RPL)', 'smp contoh', '1234567899', '12345678912356', 'diterima', 90, 'selamat', '2026-05-26 00:27:44.487', '2026-05-26 00:30:56.424'),
-('cmplwwehw0002ugq802vwu4u1', 'cmplwtlx10000ugq8g1pvd1kl', 'Hasisr', 'Hasi', 'jakarta, 12/5/2007', 'Laki-laki', 'Jalan aja dulu no 2,rt 2 rw 3 no 54', 'Kristen Protestan', 'air suci', '0867342846', '0809657354', 'Teknik Komputer & Jaringan (TKJ)', 'Smp kemaren', '1234567891', '1234567891', 'diterima', 50, 'ok', '2026-05-26 00:43:37.700', '2026-05-26 00:44:27.149'),
+('cmplwbyzr0003ug5odbd8vdkx', 'cmplw9m1y0001ug5ojwckxfjw', 'contoh', 'contoh', '15 januari 2010', 'Perempuan', 'jl. apa aja dulu', 'Islam', 'contoh', '012345678', '012345678', 'Rekayasa Perangkat Lunak (RPL)', 'smp contoh', '1234567899', '12345678912356', 'diterima_berkas', 90, 'selamat', '2026-05-26 00:27:44.487', '2026-05-26 00:30:56.424'),
+('cmplwwehw0002ugq802vwu4u1', 'cmplwtlx10000ugq8g1pvd1kl', 'Hasisr', 'Hasi', 'jakarta, 12/5/2007', 'Laki-laki', 'Jalan aja dulu no 2,rt 2 rw 3 no 54', 'Kristen Protestan', 'air suci', '0867342846', '0809657354', 'Teknik Komputer & Jaringan (TKJ)', 'Smp kemaren', '1234567891', '1234567891', 'diterima_berkas', 50, 'ok', '2026-05-26 00:43:37.700', '2026-05-26 00:44:27.149'),
 ('cmplx486d0005ugq89d5zoes2', 'cmplx1a9i0003ugq8yj8b57k8', 'ambon', 'a', 'abc', 'Perempuan', 'pitar', 'Kristen Katolik', 'kunto', '0891345678', '08435267', 'Rekayasa Perangkat Lunak (RPL)', 'mts', '25', '12', 'ditolak', 5, 'belajar lagi coooo', '2026-05-26 00:49:42.757', '2026-05-26 00:51:08.545');
 
 -- --------------------------------------------------------

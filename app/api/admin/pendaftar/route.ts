@@ -9,26 +9,21 @@ export async function GET() {
   }
 
   const data = await prisma.pendaftaran.findMany({
-    include: {
-      user: {
-        select: { email: true },
-      },
-    },
+    include: { user: { select: { email: true } } },
     orderBy: { createdAt: 'desc' },
   })
 
   const stats = {
-    total: data.length,
-    pending: data.filter(p => p.status === 'pending').length,
+    total:    data.length,
+    pending:  data.filter(p => p.status === 'pending').length,
     verified: data.filter(p => p.status === 'verified').length,
-    diterima: data.filter(p => p.status === 'diterima').length,
-    ditolak: data.filter(p => p.status === 'ditolak').length,
+    diterima: data.filter(p => ['diterima_berkas', 'tes', 'lulus'].includes(p.status)).length,
+    ditolak:  data.filter(p => p.status === 'ditolak').length,
+    lulus:    data.filter(p => p.status === 'lulus').length,
+    tidak_lulus: data.filter(p => p.status === 'tidak_lulus').length,
+    daftar_ulang: data.filter(p => p.sudahDaftarUlang).length,
   }
 
-  const enriched = data.map(p => ({
-    ...p,
-    userEmail: p.user.email,
-  }))
-
+  const enriched = data.map(p => ({ ...p, userEmail: p.user.email }))
   return NextResponse.json({ data: enriched, stats })
 }

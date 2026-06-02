@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { GraduationCap, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import Image from 'next/image';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -47,9 +48,21 @@ export default function LoginPage() {
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 36 }}>
           <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}>
-            <div style={{ width: 52, height: 52, background: 'linear-gradient(135deg,#C8973A,#E8B84B)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <GraduationCap size={28} color="#0A1628" />
-            </div>
+            <div style={{
+                          width: 52, height: 52,
+                          borderRadius: 10,
+                          overflow: 'hidden',
+                          position: 'relative',
+                        }}>
+                          <Image
+                            src="/images/logo.png"
+                            alt="Logo SMK Citra Negara"
+                            width={52}
+                            height={52}
+                            style={{ objectFit: 'cover' }}
+                          />
+                        </div>
+            
             <div style={{ textAlign: 'left' }}>
               <div style={{ color: 'white', fontWeight: 800, fontSize: 18 }}>SMK Citra Negara</div>
               <div style={{ color: '#C8973A', fontSize: 12 }}>Portal SPMB</div>
@@ -112,11 +125,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Demo accounts */}
-          <div style={{ background: '#F0F9FF', borderRadius: 8, padding: 14, marginTop: 20, border: '1px solid #BAE6FD' }}>
-            <p style={{ fontSize: 11, fontWeight: 700, color: '#0369A1', marginBottom: 6 }}>AKUN DEMO:</p>
-            <p style={{ fontSize: 11, color: '#0369A1', fontFamily: 'monospace' }}>Admin: admin@smkcitranegara.sch.id / admin123</p>
-          </div>
+          
         </div>
 
         <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.4)', fontSize: 12, marginTop: 24 }}>
