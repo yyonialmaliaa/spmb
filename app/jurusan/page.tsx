@@ -3,9 +3,12 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import Link from 'next/link';
 import { CheckCircle, Users, Clock, Monitor } from 'lucide-react';
+import { useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 const JURUSAN = [
   {
+    id: 'pplg',
     logo: '/images/logopplg.png',
     kode: 'PPLG',
     nama: 'Pengembangan Perangkat Lunak & Gim',
@@ -20,16 +23,17 @@ const JURUSAN = [
       'Desain Antarmuka Pengguna (UI) dan Pengalaman Pengguna (UX)',
       'Manajemen Proyek Perangkat Lunak',
       'Keamanan Perangkat Lunak',
-      'Testing dan Debugging'
+      'Testing dan Debugging',
     ],
-    prospek: ['Web Developer', 'Mobile Developer', 'programmer', 'UI/UX Designer', 'Mobile App Developer', 'Quality Assurance (QA) Tester'],
+    prospek: ['Web Developer', 'Mobile Developer', 'Programmer', 'UI/UX Designer', 'Mobile App Developer', 'Quality Assurance (QA) Tester'],
     color: '#1E3A5F',
   },
   {
+    id: 'tjkt',
     logo: '/images/logotjkt.png',
     kode: 'TJKT',
     nama: 'Teknik Jaringan Komputer dan Telekomunikasi',
-    deskripsi: 'Bidang studi Teknik Jaringan Komputer dan Telekomunikasi adalah program pendidikan yang dirancang untuk mempersiapkan siswa dengan pengetahuan dan keterampilan praktis dalam bidang jaringan komputer dan telekomunikasi',
+    deskripsi: 'Bidang studi Teknik Jaringan Komputer dan Telekomunikasi adalah program pendidikan yang dirancang untuk mempersiapkan siswa dengan pengetahuan dan keterampilan praktis dalam bidang jaringan komputer dan telekomunikasi.',
     kuota: 72,
     kelas: 2,
     kompetensi: [
@@ -46,15 +50,16 @@ const JURUSAN = [
     color: '#3a96d0',
   },
   {
+    id: 'dkv',
     logo: '/images/logodkv.png',
     kode: 'DKV',
     nama: 'Desain Komunikasi Visual',
-    deskripsi: 'Bidang studi Desain Komunikasi Visual adalah program pendidikan yang fokus pada pengembangan keterampilan dalam menciptakan karya visual yang efektif untuk komunikasi. Program ini mencakup berbagai aspek desain grafis, ilustrasi, fotografi, animasi, dan multimedia untuk mempersiapkan siswa menjadi profesional kreatif yang mampu bekerja di industri kreatif dan media.',
+    deskripsi: 'Bidang studi Desain Komunikasi Visual adalah program pendidikan yang fokus pada pengembangan keterampilan dalam menciptakan karya visual yang efektif untuk komunikasi. Program ini mencakup berbagai aspek desain grafis, ilustrasi, fotografi, animasi, dan multimedia.',
     kuota: 36,
     kelas: 3,
     kompetensi: [
       'Dasar-dasar Desain Grafis',
-      'ilustrasi dan Seni Digital',
+      'Ilustrasi dan Seni Digital',
       'Fotografi',
       'Animasi dan Multimedia',
       'Desain Web dan Interaktif',
@@ -62,18 +67,19 @@ const JURUSAN = [
       'Produksi Video',
       'Desain Publikasi',
     ],
-    prospek: ['Desain grafis', 'ilustrator', 'Fotografer', 'vidiografer','editor vidio','Animator','Designer web', 'Desainer Identitas Visual',],
+    prospek: ['Desainer Grafis', 'Ilustrator', 'Fotografer', 'Videografer', 'Editor Video', 'Animator', 'Designer Web', 'Desainer Identitas Visual'],
     color: '#DC2626',
   },
   {
+    id: 'pm',
     logo: '/images/logopm.png',
     kode: 'PM',
     nama: 'Pemasaran',
-    deskripsi: 'Bidang studi Pemasaran adalah program pendidikan yang fokus pada pengembangan keterampilan dalam bidang pemasaran dan penjualan. Program ini mencakup berbagai aspek pemasaran, mulai dari riset pasar, strategi pemasaran, hingga teknik penjualan dan pelayanan pelanggan, dengan tujuan menghasilkan lulusan yang siap bekerja di berbagai sektor industri.',
+    deskripsi: 'Bidang studi Pemasaran adalah program pendidikan yang fokus pada pengembangan keterampilan dalam bidang pemasaran dan penjualan. Program ini mencakup berbagai aspek pemasaran, mulai dari riset pasar, strategi pemasaran, hingga teknik penjualan dan pelayanan pelanggan.',
     kuota: 36,
     kelas: 1,
     kompetensi: [
-      'Dasar-dasar Pemasarann',
+      'Dasar-dasar Pemasaran',
       'Riset Pasar',
       'Strategi Pemasaran',
       'Promosi dan Periklanan',
@@ -86,14 +92,15 @@ const JURUSAN = [
     color: '#92681A',
   },
   {
+    id: 'mplb',
     logo: '/images/logomplb.png',
     kode: 'MPLB',
     nama: 'Manajemen Perkantoran & Layanan Bisnis',
-    deskripsi: 'Bidang studi Manajemen Perkantoran dan Layanan Bisnis adalah program pendidikan yang dirancang untuk mempersiapkan siswa dengan pengetahuan dan keterampilan praktis dalam mengelola administrasi perkantoran dan memberikan layanan bisnis yang efektif. Program ini bertujuan untuk menghasilkan lulusan yang siap kerja di berbagai jenis perusahaan dan organisasi, baik di sektor publik maupun swasta.',
+    deskripsi: 'Bidang studi Manajemen Perkantoran dan Layanan Bisnis adalah program pendidikan yang dirancang untuk mempersiapkan siswa dengan pengetahuan dan keterampilan praktis dalam mengelola administrasi perkantoran dan memberikan layanan bisnis yang efektif.',
     kuota: 36,
     kelas: 1,
     kompetensi: [
-      'dasar Manajemen Perkantoran',
+      'Dasar Manajemen Perkantoran',
       'Administrasi Perkantoran',
       'Teknologi Perkantoran',
       'Komunikasi Bisnis',
@@ -103,13 +110,14 @@ const JURUSAN = [
       'Sumber Daya Manusia',
     ],
     prospek: ['Staf Administrasi', 'Sekretaris', 'Resepsionis', 'Staf Layanan Pelanggan', 'Asisten Manajer', 'Staf Pengarsipan'],
-    color: '#ffd828',
+    color: '#92681A',
   },
   {
+    id: 'ph',
     logo: '/images/logoph.png',
     kode: 'PH',
     nama: 'Perhotelan',
-    deskripsi: 'Program Keahlian Perhotelan adalah program pendidikan yang dirancang untuk mencetak para profesional muda yang kompeten dan siap terjun ke dalam industri pariwisata dan perhotelan yang dinamis. Program ini membekali siswa dengan pengetahuan, keterampilan, dan sikap (attitude) yang dibutuhkan untuk memberikan pelayanan prima (excellent service) di berbagai sektor, mulai dari hotel bintang lima, restoran, hingga kapal pesiar.',
+    deskripsi: 'Program Keahlian Perhotelan adalah program pendidikan yang dirancang untuk mencetak para profesional muda yang kompeten dan siap terjun ke dalam industri pariwisata dan perhotelan yang dinamis.',
     kuota: 36,
     kelas: 1,
     kompetensi: [
@@ -126,10 +134,31 @@ const JURUSAN = [
   },
 ];
 
+// Offset scroll agar tidak tertutup sticky navbar (tinggi navbar ~70px + sedikit jarak)
+const SCROLL_OFFSET = 86;
+
+function ScrollToHash() {
+  useEffect(() => {
+    const hash = window.location.hash.replace('#', '');
+    if (!hash) return;
+    // Tunggu render selesai
+    const timer = setTimeout(() => {
+      const el = document.getElementById(hash);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+  return null;
+}
+
 export default function JurusanPage() {
   return (
     <>
       <Navbar />
+      <ScrollToHash />
       <main>
         {/* Hero */}
         <section className="hero-gradient" style={{ padding: '80px 24px' }}>
@@ -168,16 +197,21 @@ export default function JurusanPage() {
         <section style={{ padding: '70px 24px', background: '#FAF7F0' }}>
           <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 32 }}>
             {JURUSAN.map((j) => (
-              <div key={j.kode} style={{
-                background: 'white', borderRadius: 20, overflow: 'hidden',
-                border: '1px solid #F0EBE0',
-                display: 'grid', gridTemplateColumns: '300px 1fr',
-                boxShadow: '0 2px 20px rgba(10,22,40,0.06)',
-              }}>
+              // ← id anchor di sini, scroll-margin-top untuk offset navbar sticky
+              <div
+                key={j.kode}
+                id={j.id}
+                style={{
+                  scrollMarginTop: SCROLL_OFFSET,
+                  background: 'white', borderRadius: 20, overflow: 'hidden',
+                  border: '1px solid #F0EBE0',
+                  display: 'grid', gridTemplateColumns: '300px 1fr',
+                  boxShadow: '0 2px 20px rgba(10,22,40,0.06)',
+                }}
+              >
                 {/* Left panel */}
                 <div style={{ background: j.color, padding: 36, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
-                    {/* Logo — pakai <img> biasa agar tidak perlu konfigurasi next/image */}
                     <div style={{
                       width: 80, height: 80,
                       background: 'rgba(255,255,255,0.15)',
