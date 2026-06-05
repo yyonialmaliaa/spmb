@@ -7,6 +7,7 @@ import {
   LogOut, LayoutDashboard, BarChart2, User,
   TrendingUp, ChevronRight, Award, Calendar, RefreshCw, ClipboardCheck
 } from 'lucide-react';
+import Image from 'next/image';
 
 type Stats = {
   total: number; pending: number; verified: number;
@@ -70,11 +71,25 @@ export default function AdminDashboard() {
   return (
     <div style={{ minHeight: '100vh', background: '#F8F9FA', display: 'flex' }}>
       {/* Sidebar */}
-      <aside style={{ width: 240, background: '#0A1628', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+      <aside style={{ width: 240, background: 'linear-gradient(180deg, #123524 0%, #0B2A1C 100%)', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
         <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <div style={{ width: 38, height: 38, background: 'linear-gradient(135deg,#C8973A,#E8B84B)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <GraduationCap size={20} color="#0A1628" />
+             <div
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: 10,
+                overflow: "hidden",
+                position: "relative",
+              }}
+            >
+              <Image
+                src="/images/logo.png"
+                alt="Logo SMK Citra Negara"
+                width={38}
+                height={38}
+                style={{ objectFit: "cover" }}
+              />
             </div>
             <div>
               <div style={{ color: 'white', fontWeight: 700, fontSize: 13 }}>SMK Citra Negara</div>
@@ -112,12 +127,53 @@ export default function AdminDashboard() {
 
       {/* Main */}
       <div style={{ flex: 1, overflow: 'auto' }}>
-        <header style={{ background: 'white', borderBottom: '1px solid #E5E7EB', padding: '0 32px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h1 style={{ fontSize: 18, fontWeight: 700, color: '#0A1628' }}>Dashboard Admin</h1>
-          <div style={{ fontSize: 13, color: '#6B7280' }}>
-            {new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-          </div>
-        </header>
+       <header
+  style={{
+    background: 'white',
+    borderBottom: '1px solid #E5E7EB',
+    padding: '0 32px',
+    height: 90,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  }}
+>
+  <div>
+    <h1
+      style={{
+        fontSize: 18,
+        fontWeight: 700,
+        color: '#0B3B2E',
+        marginBottom: 4,
+      }}
+    >
+      Dashboard Admin
+    </h1>
+
+    <p
+      style={{
+        fontSize: 12,
+        color: '#6B7280',
+      }}
+    >
+      Pantau statistik dan aktivitas pendaftaran — TA 2026/2027
+    </p>
+  </div>
+
+  <div
+    style={{
+      fontSize: 13,
+      color: '#6B7280',
+    }}
+  >
+    {new Date().toLocaleDateString('id-ID', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })}
+  </div>
+</header>
 
         <main style={{ padding: '28px 32px' }}>
           {/* Stats Grid 8 kartu */}
@@ -127,7 +183,7 @@ export default function AdminDashboard() {
               { label: 'Menunggu',         val: stats.pending,      color: '#D97706', bg: '#FFFBEB', icon: Clock,           sub: 'Perlu diverifikasi' },
               { label: 'Lulus',            val: stats.lulus,        color: '#059669', bg: '#F0FDF4', icon: Award,           sub: 'Lolos seleksi' },
               { label: 'Tidak Lulus',      val: stats.tidak_lulus,  color: '#DC2626', bg: '#FFF1F2', icon: XCircle,         sub: 'Tidak lolos' },
-              { label: 'Berkas Diterima',  val: stats.diterima,     color: '#0891B2', bg: '#F0F9FF', icon: CheckCircle,     sub: 'Termasuk tes & lulus' },
+              { label: 'Berkas Diterima',  val: stats.diterima,     color: '#000000', bg: '#F0F9FF', icon: CheckCircle,     sub: 'Termasuk tes & lulus' },
               { label: 'Ditolak',          val: stats.ditolak,      color: '#991B1B', bg: '#FEF2F2', icon: XCircle,         sub: 'Perlu revisi' },
               { label: 'Daftar Ulang ✓',  val: stats.daftar_ulang, color: '#065F46', bg: '#F0FDF4', icon: ClipboardCheck,  sub: 'Sudah daftar ulang' },
               { label: 'Diverifikasi',     val: stats.verified,     color: '#1E40AF', bg: '#EFF6FF', icon: RefreshCw,       sub: 'Sedang dicek admin' },
@@ -163,11 +219,11 @@ export default function AdminDashboard() {
                   {/* Bar */}
                   <div style={{ height: 14, background: '#F3F4F6', borderRadius: 7, overflow: 'hidden', display: 'flex', marginBottom: 16 }}>
                     {[
-                      { val: stats.lulus + stats.daftar_ulang, color: '#059669' },
-                      { val: stats.diterima, color: '#0891B2' },
-                      { val: stats.verified, color: '#3B82F6' },
-                      { val: stats.pending, color: '#F59E0B' },
-                      { val: stats.ditolak + stats.tidak_lulus, color: '#EF4444' },
+                      { val: stats.lulus + stats.daftar_ulang, color: '#047857' },
+                      { val: stats.diterima, color: '#1D4ED8' },
+                      { val: stats.verified, color: '#6D28D9' },
+                      { val: stats.pending, color: '#D97706' },
+                      { val: stats.ditolak + stats.tidak_lulus, color: '#B91C1C' },
                     ].filter(b => b.val > 0).map((b, i) => (
                       <div key={i} style={{ width: `${(b.val / stats.total) * 100}%`, background: b.color, transition: 'width 0.6s' }} />
                     ))}
@@ -176,11 +232,11 @@ export default function AdminDashboard() {
                   {/* Legend */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     {[
-                      { label: 'Lulus + Daftar Ulang', val: stats.lulus + stats.daftar_ulang, color: '#059669' },
-                      { label: 'Berkas Diterima / Tes', val: stats.diterima, color: '#0891B2' },
-                      { label: 'Diverifikasi', val: stats.verified, color: '#3B82F6' },
-                      { label: 'Menunggu', val: stats.pending, color: '#F59E0B' },
-                      { label: 'Ditolak + Tidak Lulus', val: stats.ditolak + stats.tidak_lulus, color: '#EF4444' },
+                      { label: 'Lulus + Daftar Ulang', val: stats.lulus + stats.daftar_ulang, color: '#047857' },
+                      { label: 'Berkas Diterima / Tes', val: stats.diterima, color: '#1D4ED8' },
+                      { label: 'Diverifikasi', val: stats.verified, color: '#6D28D9' },
+                      { label: 'Menunggu', val: stats.pending, color: '#D97706' },
+                      { label: 'Ditolak + Tidak Lulus', val: stats.ditolak + stats.tidak_lulus, color: '#B91C1C' },
                     ].map(item => (
                       <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <div style={{ width: 10, height: 10, borderRadius: '50%', background: item.color, flexShrink: 0 }} />
@@ -195,7 +251,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Alur SPMB */}
-            <div style={{ background: '#0A1628', borderRadius: 14, padding: 22, color: 'white' }}>
+            <div style={{ background: '#122c1f', borderRadius: 14, padding: 22, color: 'white' }}>
               <h3 style={{ fontSize: 14, fontWeight: 700, color: '#E8B84B', marginBottom: 18 }}>Alur Status SPMB</h3>
               {[
                 { s: 'pending',         label: '1. Menunggu Verifikasi',    val: stats.pending },

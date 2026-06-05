@@ -7,6 +7,7 @@ import {
   LogOut, User, Download, Printer, TrendingUp,
   CheckCircle, XCircle, Clock, Award, RefreshCw, ClipboardCheck
 } from 'lucide-react';
+import Image from 'next/image';
 
 type Pendaftaran = {
   id: string; namaLengkap: string; jurusan: string; asalSMP?: string; asalSekolah?: string;
@@ -110,11 +111,25 @@ export default function AdminLaporan() {
   return (
     <div style={{ minHeight: '100vh', background: '#F8F9FA', display: 'flex' }}>
       {/* Sidebar */}
-      <aside style={{ width: 240, background: '#0A1628', flexShrink: 0, display: 'flex', flexDirection: 'column' }} className="no-print">
+      <aside style={{ width: 240, background: 'linear-gradient(180deg, #123524 0%, #0B2A1C 100%)', flexShrink: 0, display: 'flex', flexDirection: 'column' }} className="no-print">
         <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <div style={{ width: 38, height: 38, background: 'linear-gradient(135deg,#C8973A,#E8B84B)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <GraduationCap size={20} color="#0A1628" />
+             <div
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: 10,
+                overflow: "hidden",
+                position: "relative",
+              }}
+            >
+              <Image
+                src="/images/logo.png"
+                alt="Logo SMK Citra Negara"
+                width={38}
+                height={38}
+                style={{ objectFit: "cover" }}
+              />
             </div>
             <div>
               <div style={{ color: 'white', fontWeight: 700, fontSize: 13 }}>SMK Citra Negara</div>
@@ -151,17 +166,83 @@ export default function AdminLaporan() {
 
       {/* Main */}
       <div style={{ flex: 1, overflow: 'auto' }}>
-        <header style={{ background: 'white', borderBottom: '1px solid #E5E7EB', padding: '0 32px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} className="no-print">
-          <h1 style={{ fontSize: 18, fontWeight: 700, color: '#0A1628' }}>Laporan SPMB</h1>
-          <div style={{ display: 'flex', gap: 10 }}>
-            <button onClick={handleExportCSV} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '8px 16px', background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 8, color: '#059669', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
-              <Download size={15} /> Export CSV
-            </button>
-            <button onClick={handlePrint} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '8px 16px', background: '#0A1628', border: 'none', borderRadius: 8, color: 'white', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
-              <Printer size={15} /> Cetak
-            </button>
-          </div>
-        </header>
+        <header
+  className="no-print"
+  style={{
+    background: 'white',
+    borderBottom: '1px solid #E5E7EB',
+    padding: '20px 32px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  }}
+>
+  <div>
+    <h1
+      style={{
+        fontSize: 18,
+        fontWeight: 700,
+        color: '#0B3B2E',
+        marginBottom: 6,
+      }}
+    >
+      Laporan SPMB
+    </h1>
+
+    <p
+      style={{
+        fontSize: 12,
+        color: '#6B7280',
+      }}
+    >
+      Analisis dan rekapitulasi data pendaftaran — TA 2026/2027
+    </p>
+  </div>
+
+  <div style={{ display: 'flex', gap: 10 }}>
+    <button
+      onClick={handleExportCSV}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 7,
+        padding: '8px 16px',
+        background: '#F0FDF4',
+        border: '1px solid #BBF7D0',
+        borderRadius: 8,
+        color: '#059669',
+        fontSize: 13,
+        fontWeight: 600,
+        cursor: 'pointer',
+        fontFamily: 'inherit',
+      }}
+    >
+      <Download size={15} />
+      Export CSV
+    </button>
+
+    <button
+      onClick={handlePrint}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 7,
+        padding: '8px 16px',
+        background: '#0B3B2E',
+        border: 'none',
+        borderRadius: 8,
+        color: 'white',
+        fontSize: 13,
+        fontWeight: 600,
+        cursor: 'pointer',
+        fontFamily: 'inherit',
+      }}
+    >
+      <Printer size={15} />
+      Cetak
+    </button>
+  </div>
+</header>
 
         <main style={{ padding: '28px 32px' }}>
           {/* Print header */}
@@ -336,7 +417,7 @@ export default function AdminLaporan() {
                       return (
                         <tr key={p.id}>
                           <td style={{ color: '#9CA3AF', fontSize: 12 }}>{i + 1}</td>
-                          <td style={{ fontWeight: 600, color: '#0A1628', fontSize: 13 }}>{p.namaLengkap}</td>
+                          <td style={{ fontWeight: 600, color: '#000000', fontSize: 13 }}>{p.namaLengkap}</td>
                           <td style={{ fontSize: 12, color: '#6B7280' }}>{p.jurusan}</td>
                           <td style={{ fontSize: 12, color: '#6B7280' }}>{p.asalSMP || p.asalSekolah || '-'}</td>
                           <td style={{ textAlign: 'center', fontSize: 12 }}>{p.jenisKelamin === 'Laki-laki' ? 'L' : 'P'}</td>

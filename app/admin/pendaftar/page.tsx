@@ -8,6 +8,7 @@ import {
   CheckCircle, XCircle, Download, ChevronLeft, ChevronRight,
   Filter, Calendar, Award, RefreshCw, ClipboardCheck
 } from 'lucide-react';
+import Image from 'next/image';
 
 type Pendaftaran = {
   id: string; namaLengkap: string; namaPanggilan?: string;
@@ -50,9 +51,9 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }
 };
 
 const JURUSAN_LIST = [
-  { kode: 'PPLG', color: '#4F46E5' }, { kode: 'TJKT', color: '#0891B2' },
-  { kode: 'DKV',  color: '#D97706' }, { kode: 'MPLB', color: '#059669' },
-  { kode: 'PM',   color: '#DC2626' }, { kode: 'PH',   color: '#7C3AED' },
+  { kode: 'PPLG', color: '#1D4ED8' }, { kode: 'TJKT', color: '#4fcbeb' },
+  { kode: 'DKV',  color: '#D97706' }, { kode: 'MPLB', color: '#EAB308' },
+  { kode: 'PM',   color: '#e2c9ad' }, { kode: 'PH',   color: '#16A34A' },
 ];
 
 function getInitials(name: string) { return name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase(); }
@@ -186,11 +187,25 @@ export default function AdminPendaftar() {
       {toast && <div style={{ position: 'fixed', top: 24, right: 24, background: '#0A1628', color: 'white', padding: '12px 20px', borderRadius: 10, fontSize: 13, fontWeight: 600, zIndex: 9999, boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}>{toast}</div>}
 
       {/* Sidebar */}
-      <aside style={{ width: 240, background: '#0A1628', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+      <aside style={{ width: 240, background: 'linear-gradient(180deg, #123524 0%, #0B2A1C 100%)', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
         <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <div style={{ width: 38, height: 38, background: 'linear-gradient(135deg,#C8973A,#E8B84B)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <GraduationCap size={20} color="#0A1628" />
+            <div
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: 10,
+                overflow: "hidden",
+                position: "relative",
+              }}
+            >
+              <Image
+                src="/images/logo.png"
+                alt="Logo SMK Citra Negara"
+                width={38}
+                height={38}
+                style={{ objectFit: "cover" }}
+              />
             </div>
             <div>
               <div style={{ color: 'white', fontWeight: 700, fontSize: 13 }}>SMK Citra Negara</div>
@@ -227,7 +242,7 @@ export default function AdminPendaftar() {
       <div style={{ flex: 1, overflow: 'auto' }}>
         <header style={{ background: 'white', borderBottom: '1px solid #E5E7EB', padding: '16px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <h1 style={{ fontSize: 18, fontWeight: 700, color: '#0A1628', marginBottom: 2 }}>Data Pendaftar Siswa Baru</h1>
+            <h1 style={{ fontSize: 18, fontWeight: 700, color: '#0B3B2E', marginBottom: 2 }}>Data Pendaftar Siswa Baru</h1>
             <p style={{ fontSize: 12, color: '#6B7280' }}>Kelola pendaftaran siswa — TA 2026/2027</p>
           </div>
           
