@@ -1,86 +1,339 @@
 'use client';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import Image from "next/image";
+import Image from 'next/image';
 
-export default function itclubPage() {
+const STATS = [
+  { angka: '2015', label: 'Tahun Berdiri' },
+  { angka: '20+',  label: 'Anggota Aktif' },
+  { angka: '6',    label: 'Prestasi Diraih' },
+  { angka: '100%', label: 'Passion' },
+];
+
+const TUJUAN = [
+  {
+    icon: '🎸',
+    judul: 'Keterampilan Musik',
+    deskripsi:
+      'Meningkatkan kemampuan siswa dalam memainkan berbagai alat musik dan memahami teori musik secara lebih mendalam.',
+  },
+  {
+    icon: '🎨',
+    judul: 'Kreativitas & Ekspresi',
+    deskripsi:
+      'Mendorong siswa mengekspresikan diri melalui musik dan menginspirasi mereka untuk menciptakan karya original.',
+  },
+  {
+    icon: '💪',
+    judul: 'Disiplin & Kepercayaan Diri',
+    deskripsi:
+      'Membangun disiplin latihan, komitmen terhadap grup, dan keberanian tampil di depan umum dengan penuh percaya diri.',
+  },
+];
+
+const KEGIATAN = [
+  { no: '01', nama: 'Latihan Rutin Mingguan',    detail: 'Teknik bermain dan harmoni seluruh anggota band.' },
+  { no: '02', nama: 'Workshop & Masterclass',    detail: 'Musisi profesional berbagi teknik dan pengalaman.' },
+  { no: '03', nama: 'Konser & Penampilan',        detail: 'Pentas seni, festival, dan kompetisi antar sekolah.' },
+  { no: '04', nama: 'Rekaman Musik',              detail: 'Proses produksi dan teknik rekaman di studio.' },
+  { no: '05', nama: 'Pembuatan Lagu & Aransemen', detail: 'Kolaborasi menciptakan karya-karya original.' },
+  { no: '06', nama: 'Jam Session',                detail: 'Improvisasi dadakan untuk melatih kreativitas.' },
+];
+
+export default function BandPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-green-900 via-green-700 to-yellow-500 text-white">
-      
-      {/* Navbar */}
-      <Navbar />
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap');
 
-      {/* Konten Utama */}
-      <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="max-w-6xl mx-auto px-6 py-20 text-center">
-          <Image
-            src="/images/.jpg"
-            alt="it SMK Citra Negara"
-            width={900}
-            height={500}
-            className="mx-auto rounded-lg shadow-xl mb-8 object-cover"
-            priority
-          />
-          <h1 className="font-display" style={{ fontSize: 48, color: 'green', marginBottom: 16 }}>
-            BAND
-          </h1>
-          <p className="mt-4 text-lg md:text-xl opacity-90 max-w-3xl mx-auto">
-        Ekstrakurikuler Band adalah kegiatan di luar jam pelajaran yang bertujuan untuk mengembangkan bakat dan minat siswa dalam bidang musik. Dalam kegiatan ini, siswa akan belajar bermain alat musik, bekerja sama dalam sebuah grup, dan menampilkan berbagai jenis musik, mulai dari pop, rock, jazz, hingga klasik.</p>
-        </section>
+        .psk-root {
+          font-family: 'Barlow', sans-serif;
+          background: #080d0a;
+          color: #e8e0d0;
+          min-height: 100vh;
+        }
+        .psk-hero {
+          position: relative;
+          overflow: hidden;
+          background: #080d0a;
+        }
+        .psk-hero-img {
+          position: relative;
+          width: 100%;
+          height: min(70vh, 600px);
+        }
+        .psk-hero-img img {
+          object-fit: cover;
+          object-position: center top;
+          filter: brightness(0.45) contrast(1.1);
+        }
+        .psk-hero-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to bottom, transparent 20%, rgba(8,13,10,0.6) 60%, #080d0a 100%);
+        }
+        .psk-hero-content {
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          padding: 0 clamp(24px, 6vw, 80px) clamp(40px, 6vw, 72px);
+        }
+        .psk-eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          font-family: 'Barlow Condensed', sans-serif;
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          color: #C8973A;
+          margin-bottom: 16px;
+        }
+        .psk-eyebrow::before {
+          content: '';
+          display: block;
+          width: 32px; height: 2px;
+          background: #C8973A;
+        }
+        .psk-title {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: clamp(72px, 12vw, 160px);
+          line-height: 0.9;
+          color: #fff;
+          letter-spacing: 2px;
+          margin: 0 0 20px;
+        }
+        .psk-title span { color: #C8973A; }
+        .psk-subtitle {
+          max-width: 560px;
+          font-size: clamp(15px, 1.8vw, 18px);
+          color: rgba(232,224,208,0.75);
+          line-height: 1.7;
+        }
+        .psk-stats {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          border-top: 1px solid rgba(200,151,58,0.2);
+          border-bottom: 1px solid rgba(200,151,58,0.2);
+        }
+        @media (max-width: 640px) {
+          .psk-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+        .psk-stat {
+          padding: 28px 20px;
+          text-align: center;
+          border-right: 1px solid rgba(200,151,58,0.15);
+        }
+        .psk-stat:last-child { border-right: none; }
+        .psk-stat-num {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 42px;
+          color: #C8973A;
+          line-height: 1;
+          margin-bottom: 6px;
+        }
+        .psk-stat-label {
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: rgba(232,224,208,0.5);
+        }
+        .psk-section {
+          max-width: 1100px;
+          margin: 0 auto;
+          padding: clamp(56px, 8vw, 96px) clamp(24px, 6vw, 80px);
+        }
+        .psk-section-label {
+          font-family: 'Barlow Condensed', sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          color: #C8973A;
+          margin-bottom: 12px;
+        }
+        .psk-section-heading {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: clamp(40px, 5vw, 64px);
+          color: #fff;
+          line-height: 1;
+          margin-bottom: 48px;
+        }
+        .psk-tujuan-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 2px;
+        }
+        @media (max-width: 768px) {
+          .psk-tujuan-grid { grid-template-columns: 1fr; }
+        }
+        .psk-tujuan-card {
+          background: #0f1a12;
+          padding: 36px 28px;
+          border: 1px solid rgba(200,151,58,0.08);
+          transition: background 0.2s, border-color 0.2s;
+          position: relative;
+          overflow: hidden;
+        }
+        .psk-tujuan-card::after {
+          content: '';
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          height: 2px;
+          background: #C8973A;
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 0.3s ease;
+        }
+        .psk-tujuan-card:hover { background: #131f16; border-color: rgba(200,151,58,0.2); }
+        .psk-tujuan-card:hover::after { transform: scaleX(1); }
+        .psk-tujuan-icon { font-size: 36px; margin-bottom: 20px; display: block; }
+        .psk-tujuan-title {
+          font-family: 'Barlow Condensed', sans-serif;
+          font-size: 22px;
+          font-weight: 800;
+          color: #fff;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          margin-bottom: 12px;
+        }
+        .psk-tujuan-desc {
+          font-size: 14px;
+          color: rgba(232,224,208,0.65);
+          line-height: 1.75;
+        }
+        .psk-kegiatan-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1px;
+          background: rgba(200,151,58,0.1);
+        }
+        @media (max-width: 640px) {
+          .psk-kegiatan-grid { grid-template-columns: 1fr; }
+        }
+        .psk-kegiatan-item {
+          background: #080d0a;
+          padding: 28px 32px;
+          display: flex;
+          align-items: flex-start;
+          gap: 20px;
+          transition: background 0.2s;
+        }
+        .psk-kegiatan-item:hover { background: #0f1a12; }
+        .psk-kegiatan-no {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 32px;
+          color: rgba(200,151,58,0.3);
+          line-height: 1;
+          flex-shrink: 0;
+          width: 40px;
+        }
+        .psk-kegiatan-nama {
+          font-family: 'Barlow Condensed', sans-serif;
+          font-size: 18px;
+          font-weight: 700;
+          color: #fff;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 4px;
+        }
+        .psk-kegiatan-detail {
+          font-size: 13px;
+          color: rgba(232,224,208,0.5);
+        }
+        .psk-divider {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          max-width: 1100px;
+          margin: 0 auto;
+          padding: 0 clamp(24px, 6vw, 80px);
+          opacity: 0.25;
+        }
+        .psk-divider::before,
+        .psk-divider::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background: #C8973A;
+        }
+        .psk-divider-icon { font-size: 14px; }
+      `}</style>
 
-        {/* Deskripsi Tujuan & Kegiatan */}
-        <section className="max-w-4xl mx-auto px-6 py-12 sp ace-y-8">
-          <div className="bg-green-800 p-8 rounded-lg shadow-md">
-            <h2 className="text-3xl font-bold text-yellow-300 mb-4">Tujuan </h2>
-            <ul className="list-disc list-inside space-y-2 opacity-90">
-             <li>Mengembangkan Keterampilan Musik: Meningkatkan kemampuan siswa dalam memainkan berbagai alat musik.</li>
- <li>Mengajarkan teori musik dan teknik bermain alat musik secara lebih mendalam.</li>
- <li>Menumbuhkan Kreativitas dan Ekspresi Diri: Mendorong siswa untuk mengekspresikan diri mereka melalui musik. </li>
- <li>Menginspirasi siswa untuk menciptakan karya musik mereka sendiri.</li>
- <li>Meningkatkan Kerjasama dan Komunikasi: Mengajarkan pentingnya kerjasama tim dalam menciptakan harmoni musik.</li>
- <li>Meningkatkan keterampilan komunikasi antar anggota band.</li>
- <li>Meningkatkan Kepercayaan Diri:
-Memberikan kesempatan kepada siswa untuk tampil di depan umum.</li>
- <li>Membantu siswa mengatasi rasa gugup dan meningkatkan rasa percaya diri.</li>
- <li>Membangun Disiplin dan Komitmen:
-Mengajarkan pentingnya disiplin dan komitmen dalam latihan dan persiapan penampilan.</li>
- <li> Menumbuhkan rasa tanggung jawab terhadap grup dan diri sendiri.</li>
-            </ul>
+      <div className="psk-root">
+        <Navbar />
+
+        <main>
+          {/* ── Hero ── */}
+          <section className="psk-hero">
+            <div className="psk-hero-img">
+              <Image
+                src="/images/band.jpg"
+                alt="Band SMK Citra Negara"
+                fill
+                priority
+              />
+              <div className="psk-hero-overlay" />
+            </div>
+            <div className="psk-hero-content">
+              <div className="psk-eyebrow">Ekstrakurikuler SMK Citra Negara</div>
+              <h1 className="psk-title">
+                BA<span>ND</span>
+              </h1>
+              <p className="psk-subtitle">
+                Lebih dari sekadar bermusik — Band adalah ruang berekspresi, berkolaborasi, dan mencetak musisi berbakat dari SMK Citra Negara.
+              </p>
+            </div>
+          </section>
+
+          {/* ── Stats ── */}
+          <div className="psk-stats">
+            {STATS.map(s => (
+              <div key={s.label} className="psk-stat">
+                <div className="psk-stat-num">{s.angka}</div>
+                <div className="psk-stat-label">{s.label}</div>
+              </div>
+            ))}
           </div>
 
-          <div className="bg-green-800 p-8 rounded-lg shadow-md">
-            <h2 className="text-3xl font-bold text-yellow-300 mb-4">Kegiatan </h2>
-            <ul className="list-disc list-inside space-y-2 opacity-90">
-               <li>Latihan Rutin:
-Mengadakan sesi latihan mingguan untuk memperbaiki teknik bermain dan mengasah keterampilan musik.</li>
- <li>Latihan bersama seluruh anggota band untuk menyatukan permainan dan menciptakan harmoni.</li>
- <li>Workshop dan Masterclass:
-Mengundang musisi profesional untuk memberikan workshop dan berbagi pengalaman.</li>
- <li>Sesi masterclass untuk belajar teknik khusus dan tips bermain alat musik dari para ahli.</li>
- <li>Penampilan dan Konser:
-Mengadakan konser di sekolah atau di luar sekolah untuk menampilkan hasil latihan.</li>
- <li>Berpartisipasi dalam acara-acara sekolah seperti pentas seni, festival, dan kompetisi band antar sekolah.</li>
- <li>Rekaman Musik:
-Merekam lagu-lagu yang telah dipelajari atau diciptakan oleh anggota band.</li>
- <li>Belajar tentang proses produksi musik dan teknik rekaman di studio.</li>
- <li>Pembuatan Lagu dan Aransemen:
-Mendorong anggota untuk menciptakan lagu-lagu baru dan membuat aransemen musik.</li>
- <li>Mengadakan sesi brainstorming dan kolaborasi untuk menghasilkan karya-karya original.</li>
- <li>Penampilan Spesial:
-Tampil di acara khusus seperti peringatan hari besar, acara amal, dan pertunjukan komunitas.</li>
- <li>Mengadakan sesi penampilan dadakan (jam session) untuk melatih improvisasi dan kreativitas.</li>
+          {/* ── Tujuan ── */}
+          <section className="psk-section">
+            <div className="psk-section-label">Mengapa Band</div>
+            <h2 className="psk-section-heading">TUJUAN KAMI</h2>
+            <div className="psk-tujuan-grid">
+              {TUJUAN.map(t => (
+                <div key={t.judul} className="psk-tujuan-card">
+                  <span className="psk-tujuan-icon">{t.icon}</span>
+                  <div className="psk-tujuan-title">{t.judul}</div>
+                  <p className="psk-tujuan-desc">{t.deskripsi}</p>
+                </div>
+              ))}
+            </div>
+          </section>
 
-            </ul>
-          </div>
-        </section>
+          <div className="psk-divider"><span className="psk-divider-icon">✦</span></div>
 
-        
-       
-      </main>
+          {/* ── Kegiatan ── */}
+          <section className="psk-section" style={{ paddingTop: 'clamp(40px, 5vw, 64px)' }}>
+            <div className="psk-section-label">Program Latihan</div>
+            <h2 className="psk-section-heading">KEGIATAN RUTIN</h2>
+            <div className="psk-kegiatan-grid">
+              {KEGIATAN.map(k => (
+                <div key={k.no} className="psk-kegiatan-item">
+                  <div className="psk-kegiatan-no">{k.no}</div>
+                  <div>
+                    <div className="psk-kegiatan-nama">{k.nama}</div>
+                    <div className="psk-kegiatan-detail">{k.detail}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </main>
 
-      {/* Footer */}
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </>
   );
 }

@@ -125,10 +125,11 @@ function DropdownArrow({ left = '45%' }: { left?: string }) {
   );
 }
 
-function DropdownPanel({ children, triggerRef, panelWidth = 560 }: {
+function DropdownPanel({ children, triggerRef, panelWidth = 560, id }: {
   children: React.ReactNode;
   triggerRef: React.RefObject<HTMLDivElement>;
   panelWidth?: number;
+  id: string;
 }) {
   const [style, setStyle] = useState<React.CSSProperties>({ visibility: 'hidden', position: 'fixed' });
   const [arrowLeft, setArrowLeft] = useState(0);
@@ -176,7 +177,8 @@ function DropdownPanel({ children, triggerRef, panelWidth = 560 }: {
       padding: '14px',
       zIndex: 99999,
       animation: 'dropFadeIn 0.15s ease',
-    }}>
+    }}
+    data-dropdown={id}>
       {/* Arrow always points at trigger center */}
       <div style={{
         position: 'absolute',
@@ -278,10 +280,14 @@ export default function Navbar() {
   }, []);
 
   // Close dropdowns on outside click
+  // NOTE: panels are portaled to document.body, so we use data attributes to detect them
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (jurusanRef.current && !jurusanRef.current.contains(e.target as Node)) setJurusanOpen(false);
-      if (eskulRef.current   && !eskulRef.current.contains(e.target as Node))   setEskulOpen(false);
+      const target = e.target as Node;
+      const inJurusan = jurusanRef.current?.contains(target) || (target as HTMLElement).closest?.('[data-dropdown="jurusan"]');
+      const inEskul   = eskulRef.current?.contains(target)   || (target as HTMLElement).closest?.('[data-dropdown="eskul"]');
+      if (!inJurusan) setJurusanOpen(false);
+      if (!inEskul)   setEskulOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -329,7 +335,7 @@ export default function Navbar() {
                 <NavButton label="Program Keahlian" isOpen={jurusanOpen} onClick={() => setJurusanOpen(v => !v)} />
 
                 {jurusanOpen && (
-                  <DropdownPanel triggerRef={jurusanRef} panelWidth={560}>
+                  <DropdownPanel triggerRef={jurusanRef} panelWidth={560} id="jurusan">
                     <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 700, letterSpacing: 1, marginBottom: 8, paddingLeft: 2 }}>
                       6 PROGRAM KEAHLIAN
                     </p>
@@ -382,7 +388,7 @@ export default function Navbar() {
                 <NavButton label="Ekstrakurikuler" isOpen={eskulOpen} onClick={() => setEskulOpen(v => !v)} />
 
                 {eskulOpen && (
-                  <DropdownPanel triggerRef={eskulRef} panelWidth={480}>
+                  <DropdownPanel triggerRef={eskulRef} panelWidth={480} id="eskul">
                     <p style={{ fontSize: 11, color: '#9CA3AF', fontWeight: 700, letterSpacing: 1, marginBottom: 12, paddingLeft: 2 }}>
                       14+ EKSTRAKURIKULER
                     </p>

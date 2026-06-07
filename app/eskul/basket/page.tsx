@@ -1,69 +1,362 @@
 'use client';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import Image from "next/image";
+import Image from 'next/image';
 
-export default function basketPage() {
+const STATS = [
+  { angka: '2010', label: 'Tahun Berdiri' },
+  { angka: '30+',  label: 'Anggota Aktif' },
+  { angka: '8',    label: 'Prestasi Diraih' },
+  { angka: '100%', label: 'Semangat' },
+];
+
+const TUJUAN = [
+  {
+    icon: '🏀',
+    judul: 'Kebugaran Fisik',
+    deskripsi:
+      'Melalui latihan dan pertandingan rutin, basket membantu meningkatkan kebugaran, kekuatan otot, dan ketahanan fisik siswa secara menyeluruh.',
+  },
+  {
+    icon: '🤝',
+    judul: 'Kerjasama Tim',
+    deskripsi:
+      'Basket adalah olahraga tim yang mengajarkan pentingnya komunikasi, koordinasi, dan strategi bersama untuk meraih kemenangan.',
+  },
+  {
+    icon: '🏆',
+    judul: 'Sportivitas',
+    deskripsi:
+      'Siswa belajar tentang fair play, cara menghadapi kemenangan maupun kekalahan dengan sikap positif dan mental yang tangguh.',
+  },
+];
+
+const KEGIATAN = [
+  { no: '01', nama: 'Latihan Teknik Dasar', detail: 'Dribbling, passing, shooting, dan lay-up.' },
+  { no: '02', nama: 'Latihan Fisik', detail: 'Lari, jumping, dan strength training.' },
+  { no: '03', nama: 'Simulasi Pertandingan', detail: 'Strategi dan taktik permainan tim.' },
+  { no: '04', nama: 'Turnamen Internal', detail: 'Kompetisi antar kelas di dalam sekolah.' },
+  { no: '05', nama: 'Turnamen Eksternal', detail: 'Mewakili sekolah di luar lingkungan sekolah.' },
+  { no: '06', nama: 'Pengembangan Mentalitas', detail: 'Mental pemenang dan kerja keras tanpa henti.' },
+  { no: '07', nama: 'Offensive & Defensive Plays', detail: 'Strategi menyerang dan bertahan terstruktur.' },
+];
+
+export default function BasketPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-green-900 via-green-700 to-yellow-500 text-white">
-      
-      {/* Navbar */}
-      <Navbar />
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap');
 
-      {/* Konten Utama */}
-      <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="max-w-6xl mx-auto px-6 py-20 text-center">
-          <Image
-            src="/images/basket.jpg"
-            alt="basket SMK Citra Negara"
-            width={900}
-            height={500}
-            className="mx-auto rounded-lg shadow-xl mb-8 object-cover"
-            priority
-          />
-          <h1 className="font-display" style={{ fontSize: 48, color: 'green', marginBottom: 16 }}>
-            BASKET
-          </h1>
-          <p className="mt-4 text-lg md:text-xl opacity-90 max-w-3xl mx-auto">
-          Basket adalah salah satu olahraga yang populer di kalangan pelajar. Ekstrakurikuler basket tidak hanya menawarkan kegiatan fisik, tetapi juga mengajarkan berbagai keterampilan dan nilai penting. Berikut adalah beberapa aspek menarik tentang ekstrakurikuler basket:
-          </p>
-        </section>
+        .psk-root {
+          font-family: 'Barlow', sans-serif;
+          background: #080d0a;
+          color: #e8e0d0;
+          min-height: 100vh;
+        }
 
-        {/* Deskripsi Tujuan & Kegiatan */}
-        <section className="max-w-4xl mx-auto px-6 py-12 space-y-8">
-          <div className="bg-green-800 p-8 rounded-lg shadow-md">
-            <h2 className="text-3xl font-bold text-yellow-300 mb-4">Tujuan </h2>
-            <ul className="list-disc list-inside space-y-2 opacity-90">
-             <li> Meningkatkan Kebugaran Fisik: Melalui latihan dan pertandingan, basket membantu meningkatkan kebugaran, kekuatan, dan ketahanan fisik siswa.</li>
-<li>Mengembangkan Keterampilan Teknikal: Basket mengajarkan keterampilan seperti dribbling, shooting, passing, dan pertahanan.</li>
-<li>Membentuk Kerjasama Tim: Basket adalah olahraga tim yang mengajarkan pentingnya kerjasama, komunikasi, dan strategi.</li>
-<li>Meningkatkan Disiplin dan Fokus: Latihan basket membutuhkan kedisiplinan, konsentrasi, dan fokus yang tinggi.</li>
-<li>Mengajarkan Sportivitas: Siswa belajar tentang sportivitas, fair play, dan cara menghadapi kemenangan maupun kekalahan dengan sikap yang baik.</li>
-            </ul>
+        /* ── hero ── */
+        .psk-hero {
+          position: relative;
+          overflow: hidden;
+          background: #080d0a;
+        }
+        .psk-hero-img {
+          position: relative;
+          width: 100%;
+          height: min(70vh, 600px);
+        }
+        .psk-hero-img img {
+          object-fit: cover;
+          object-position: center top;
+          filter: brightness(0.45) contrast(1.1);
+        }
+        .psk-hero-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to bottom,
+            transparent 20%,
+            rgba(8,13,10,0.6) 60%,
+            #080d0a 100%
+          );
+        }
+        .psk-hero-content {
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          padding: 0 clamp(24px, 6vw, 80px) clamp(40px, 6vw, 72px);
+        }
+        .psk-eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          font-family: 'Barlow Condensed', sans-serif;
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          color: #C8973A;
+          margin-bottom: 16px;
+        }
+        .psk-eyebrow::before {
+          content: '';
+          display: block;
+          width: 32px; height: 2px;
+          background: #C8973A;
+        }
+        .psk-title {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: clamp(72px, 12vw, 160px);
+          line-height: 0.9;
+          color: #fff;
+          letter-spacing: 2px;
+          margin: 0 0 20px;
+        }
+        .psk-title span { color: #C8973A; }
+        .psk-subtitle {
+          max-width: 560px;
+          font-size: clamp(15px, 1.8vw, 18px);
+          color: rgba(232,224,208,0.75);
+          line-height: 1.7;
+        }
+
+        /* ── stats bar ── */
+        .psk-stats {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          border-top: 1px solid rgba(200,151,58,0.2);
+          border-bottom: 1px solid rgba(200,151,58,0.2);
+        }
+        @media (max-width: 640px) {
+          .psk-stats { grid-template-columns: repeat(2, 1fr); }
+        }
+        .psk-stat {
+          padding: 28px 20px;
+          text-align: center;
+          border-right: 1px solid rgba(200,151,58,0.15);
+        }
+        .psk-stat:last-child { border-right: none; }
+        .psk-stat-num {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 42px;
+          color: #C8973A;
+          line-height: 1;
+          margin-bottom: 6px;
+        }
+        .psk-stat-label {
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: rgba(232,224,208,0.5);
+        }
+
+        /* ── section base ── */
+        .psk-section {
+          max-width: 1100px;
+          margin: 0 auto;
+          padding: clamp(56px, 8vw, 96px) clamp(24px, 6vw, 80px);
+        }
+        .psk-section-label {
+          font-family: 'Barlow Condensed', sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          color: #C8973A;
+          margin-bottom: 12px;
+        }
+        .psk-section-heading {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: clamp(40px, 5vw, 64px);
+          color: #fff;
+          line-height: 1;
+          margin-bottom: 48px;
+        }
+
+        /* ── tujuan cards ── */
+        .psk-tujuan-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 2px;
+        }
+        @media (max-width: 768px) {
+          .psk-tujuan-grid { grid-template-columns: 1fr; }
+        }
+        .psk-tujuan-card {
+          background: #0f1a12;
+          padding: 36px 28px;
+          border: 1px solid rgba(200,151,58,0.08);
+          transition: background 0.2s, border-color 0.2s;
+          position: relative;
+          overflow: hidden;
+        }
+        .psk-tujuan-card::after {
+          content: '';
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          height: 2px;
+          background: #C8973A;
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 0.3s ease;
+        }
+        .psk-tujuan-card:hover { background: #131f16; border-color: rgba(200,151,58,0.2); }
+        .psk-tujuan-card:hover::after { transform: scaleX(1); }
+        .psk-tujuan-icon {
+          font-size: 36px;
+          margin-bottom: 20px;
+          display: block;
+        }
+        .psk-tujuan-title {
+          font-family: 'Barlow Condensed', sans-serif;
+          font-size: 22px;
+          font-weight: 800;
+          color: #fff;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          margin-bottom: 12px;
+        }
+        .psk-tujuan-desc {
+          font-size: 14px;
+          color: rgba(232,224,208,0.65);
+          line-height: 1.75;
+        }
+
+        /* ── kegiatan list ── */
+        .psk-kegiatan-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1px;
+          background: rgba(200,151,58,0.1);
+        }
+        @media (max-width: 640px) {
+          .psk-kegiatan-grid { grid-template-columns: 1fr; }
+        }
+        .psk-kegiatan-item {
+          background: #080d0a;
+          padding: 28px 32px;
+          display: flex;
+          align-items: flex-start;
+          gap: 20px;
+          transition: background 0.2s;
+        }
+        .psk-kegiatan-item:hover { background: #0f1a12; }
+        .psk-kegiatan-no {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 32px;
+          color: rgba(200,151,58,0.3);
+          line-height: 1;
+          flex-shrink: 0;
+          width: 40px;
+        }
+        .psk-kegiatan-nama {
+          font-family: 'Barlow Condensed', sans-serif;
+          font-size: 18px;
+          font-weight: 700;
+          color: #fff;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 4px;
+        }
+        .psk-kegiatan-detail {
+          font-size: 13px;
+          color: rgba(232,224,208,0.5);
+        }
+
+        /* ── divider ── */
+        .psk-divider {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          max-width: 1100px;
+          margin: 0 auto;
+          padding: 0 clamp(24px, 6vw, 80px);
+          opacity: 0.25;
+        }
+        .psk-divider::before,
+        .psk-divider::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background: #C8973A;
+        }
+        .psk-divider-icon { font-size: 14px; }
+      `}</style>
+
+      <div className="psk-root">
+        <Navbar />
+
+        <main>
+          {/* ── Hero ── */}
+          <section className="psk-hero">
+            <div className="psk-hero-img">
+              <Image
+                src="/images/basket.jpg"
+                alt="Basket SMK Citra Negara"
+                fill
+                priority
+              />
+              <div className="psk-hero-overlay" />
+            </div>
+            <div className="psk-hero-content">
+              <div className="psk-eyebrow">Ekstrakurikuler SMK Citra Negara</div>
+              <h1 className="psk-title">
+                BAS<span>KET</span>
+              </h1>
+              <p className="psk-subtitle">
+                Lebih dari sekadar olahraga — basket adalah ruang membangun karakter, melatih kerja sama, dan mencetak atlet berprestasi dari SMK Citra Negara.
+              </p>
+            </div>
+          </section>
+
+          {/* ── Stats ── */}
+          <div className="psk-stats">
+            {STATS.map(s => (
+              <div key={s.label} className="psk-stat">
+                <div className="psk-stat-num">{s.angka}</div>
+                <div className="psk-stat-label">{s.label}</div>
+              </div>
+            ))}
           </div>
 
-          <div className="bg-green-800 p-8 rounded-lg shadow-md">
-            <h2 className="text-3xl font-bold text-yellow-300 mb-4">Kegiatan </h2>
-            <ul className="list-disc list-inside space-y-2 opacity-90">
-               <li>Latihan Teknik Dasar: Siswa dilatih berbagai teknik dasar seperti dribbling, passing, shooting, dan penguasaan bola.</li>
-<li>Latihan Teknik Dasar: Siswa dilatih teknik dasar basket seperti dribbling, passing, shooting, dan lay-up.</li>
-<li>Latihan Fisik: Selain teknik, latihan fisik seperti lari, jumping, dan strength training dilakukan untuk meningkatkan kebugaran dan kekuatan.</li>
-<li>Simulasi Pertandingan: Siswa berlatih dalam bentuk simulasi pertandingan untuk memahami strategi permainan dan taktik tim.</li>
-<li>Turnamen Internal dan Eksternal: Siswa diberi kesempatan untuk mengikuti pertandingan dan turnamen baik di dalam sekolah maupun di luar sekolah.</li>
-<li>Pengembangan Mentalitas: Basket juga melatih siswa untuk memiliki mentalitas pemenang yang positif, menghadapi tekanan, dan bekerja keras untuk mencapai tujuan.</li>
-<li>Latihan Strategi dan Taktik: Siswa diajarkan berbagai strategi dan taktik permainan, termasuk offensive plays dan defensive schemes.</li>
+          {/* ── Tujuan ── */}
+          <section className="psk-section">
+            <div className="psk-section-label">Mengapa Basket</div>
+            <h2 className="psk-section-heading">TUJUAN KAMI</h2>
+            <div className="psk-tujuan-grid">
+              {TUJUAN.map(t => (
+                <div key={t.judul} className="psk-tujuan-card">
+                  <span className="psk-tujuan-icon">{t.icon}</span>
+                  <div className="psk-tujuan-title">{t.judul}</div>
+                  <p className="psk-tujuan-desc">{t.deskripsi}</p>
+                </div>
+              ))}
+            </div>
+          </section>
 
-            </ul>
-          </div>
-        </section>
+          <div className="psk-divider"><span className="psk-divider-icon">✦</span></div>
 
-        
-       
-      </main>
+          {/* ── Kegiatan ── */}
+          <section className="psk-section" style={{ paddingTop: 'clamp(40px, 5vw, 64px)' }}>
+            <div className="psk-section-label">Program Latihan</div>
+            <h2 className="psk-section-heading">KEGIATAN RUTIN</h2>
+            <div className="psk-kegiatan-grid">
+              {KEGIATAN.map(k => (
+                <div key={k.no} className="psk-kegiatan-item">
+                  <div className="psk-kegiatan-no">{k.no}</div>
+                  <div>
+                    <div className="psk-kegiatan-nama">{k.nama}</div>
+                    <div className="psk-kegiatan-detail">{k.detail}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
 
-      {/* Footer */}
-      <Footer />
-    </div>
+        </main>
+
+        <Footer />
+      </div>
+    </>
   );
 }
