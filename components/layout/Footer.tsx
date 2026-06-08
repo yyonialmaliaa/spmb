@@ -216,7 +216,7 @@ export default function Footer() {
             © 2026 SMK Citra Negara. All rights reserved.
           </p>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
-            Sistem SPMB v1.0
+            SPMB v1.0 team 5
           </p>
         </div>
       </div>

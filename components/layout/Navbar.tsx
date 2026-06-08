@@ -6,15 +6,16 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Menu, X, ChevronDown } from 'lucide-react';
 
+
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 const JURUSAN_LIST = [
-  { kode: 'PPLG', nama: 'Pengembangan Perangkat Lunak & Gim',        singkat: 'Web, mobile, database & UI/UX',        color: '#1E3A5F', emoji: '💻', href: '/jurusan#pplg' },
-  { kode: 'TJKT', nama: 'Teknik Jaringan Komputer & Telekomunikasi', singkat: 'Jaringan, keamanan & infrastruktur',     color: '#3a96d0', emoji: '🌐', href: '/jurusan#tjkt' },
-  { kode: 'DKV',  nama: 'Desain Komunikasi Visual',                  singkat: 'Grafis, animasi & multimedia kreatif',  color: '#DC2626', emoji: '🎨', href: '/jurusan#dkv'  },
-  { kode: 'PM',   nama: 'Pemasaran',                                 singkat: 'Strategi, digital marketing & sales',   color: '#92681A', emoji: '📈', href: '/jurusan#pm'   },
-  { kode: 'MPLB', nama: 'Manajemen Perkantoran & Layanan Bisnis',    singkat: 'Administrasi, sekretaris & bisnis',     color: '#b59a00', emoji: '🗂️', href: '/jurusan#mplb' },
-  { kode: 'PH',   nama: 'Perhotelan',                                singkat: 'Hospitality, restoran & pariwisata',    color: '#024d20', emoji: '🏨', href: '/jurusan#ph'   },
+  { kode: 'PPLG', nama: 'Pengembangan Perangkat Lunak & Gim',        singkat: 'Web, mobile, database & UI/UX',        color: '#1E3A5F', logo: '/images/logopplg.png', href: '/jurusan#pplg' },
+  { kode: 'TJKT', nama: 'Teknik Jaringan Komputer & Telekomunikasi', singkat: 'Jaringan, keamanan & infrastruktur',     color: '#3a96d0', logo: '/images/logotjkt.png', href: '/jurusan#tjkt' },
+  { kode: 'DKV',  nama: 'Desain Komunikasi Visual',                  singkat: 'Grafis, animasi & multimedia kreatif',  color: '#DC2626', logo: '/images/logodkv.png', href: '/jurusan#dkv'  },
+  { kode: 'PM',   nama: 'Pemasaran',                                 singkat: 'Strategi, digital marketing & sales',   color: '#92681A', logo: '/images/logopm.png', href: '/jurusan#pm'   },
+  { kode: 'MPLB', nama: 'Manajemen Perkantoran & Layanan Bisnis',    singkat: 'Administrasi, sekretaris & bisnis',     color: '#b59a00', logo: '/images/logomplb.png', href: '/jurusan#mplb' },
+  { kode: 'PH',   nama: 'Perhotelan',                                singkat: 'Hospitality, restoran & pariwisata',    color: '#024d20', logo: '/images/logoph.png', href: '/jurusan#ph'   },
 ];
 
 const ESKUL_LIST = [
@@ -127,7 +128,7 @@ function DropdownArrow({ left = '45%' }: { left?: string }) {
 
 function DropdownPanel({ children, triggerRef, panelWidth = 560, id }: {
   children: React.ReactNode;
-  triggerRef: React.RefObject<HTMLDivElement>;
+  triggerRef: React.RefObject<HTMLDivElement | null>;
   panelWidth?: number;
   id: string;
 }) {
@@ -342,13 +343,29 @@ export default function Navbar() {
                     <div className="drop-grid">
                       {JURUSAN_LIST.map(j => (
                         <Link key={j.kode} href={j.href} className="drop-item" onClick={() => setJurusanOpen(false)}>
-                          <div style={{
-                            width: 38, height: 38, borderRadius: 9, flexShrink: 0,
-                            background: j.color,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
-                          }}>
-                            {j.emoji}
-                          </div>
+                         <div
+  style={{
+    width: 38,
+    height: 38,
+    borderRadius: 9,
+    background: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    border: '1px solid #eee'
+  }}
+>
+  <Image
+    src={j.logo}
+    alt={j.kode}
+    width={30}
+    height={30}
+    style={{
+      objectFit: 'contain'
+    }}
+  />
+</div>
                           <div style={{ minWidth: 0 }}>
                             <span style={{
                               display: 'inline-block', marginBottom: 2,
@@ -473,13 +490,30 @@ export default function Navbar() {
                       borderBottom: '1px solid rgba(255,255,255,0.04)',
                     }}
                   >
-                    <div style={{
-                      width: 30, height: 30, borderRadius: 7, flexShrink: 0,
-                      background: j.color,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15,
-                    }}>
-                      {j.emoji}
-                    </div>
+                   <div
+  style={{
+    width: 30,
+    height: 30,
+    borderRadius: 7,
+    flexShrink: 0,
+    background: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    padding: 3,
+  }}
+>
+  <Image
+    src={j.logo}
+    alt={j.kode}
+    width={24}
+    height={24}
+    style={{
+      objectFit: 'contain',
+    }}
+  />
+</div>
                     <div>
                       <span style={{ fontSize: 10, fontWeight: 700, color: '#C8973A', marginRight: 6 }}>{j.kode}</span>
                       <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>{j.nama}</span>
