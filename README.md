@@ -1,6 +1,6 @@
 # 🎓 SPMB Online
 
-Sistem Penerimaan Murid Baru (SPMB) berbasis web yang dibuat menggunakan Next.js, TypeScript, Prisma, dan PostgreSQL.
+Sistem Penerimaan Murid Baru (SPMB) berbasis web menggunakan Next.js, TypeScript, Prisma ORM, dan MySQL.
 
 Repository:
 
