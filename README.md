@@ -1,4 +1,4 @@
-# 🎓 SPMB Online
+# SPMB Online
 
 Sistem Penerimaan Murid Baru (SPMB) berbasis web menggunakan Next.js, TypeScript, Prisma ORM, dan MySQL.
 
@@ -8,7 +8,7 @@ https://github.com/yyonialmaliaa/spmb
 
 ---
 
-# ✨ Fitur
+## Fitur
 
 * Landing Page SPMB
 * Informasi Jurusan
@@ -24,28 +24,28 @@ https://github.com/yyonialmaliaa/spmb
 
 ---
 
-# 🛠️ Teknologi Yang Digunakan
+## Teknologi yang Digunakan
 
 * Next.js
 * React
 * TypeScript
 * Prisma ORM
-* MySql
+* MySQL
 * Tailwind CSS
 * Vercel
 
 ---
 
-# 📋 Persyaratan
+## Persyaratan
 
-Pastikan sudah menginstall:
+Pastikan perangkat sudah terinstall:
 
-* Node.js v18 atau lebih baru
+* Node.js versi 18 atau lebih baru
 * Git
 * XAMPP
-* VS Code (disarankan)
+* Visual Studio Code (disarankan)
 
-Cek versi:
+Cek versi Node.js dan NPM:
 
 ```bash
 node -v
@@ -54,7 +54,7 @@ npm -v
 
 ---
 
-# 📥 Mengambil Project Dari GitHub
+## Mengambil Project dari GitHub
 
 Clone repository:
 
@@ -70,57 +70,51 @@ cd spmb
 
 ---
 
-# 📦 Install Dependency
-
-Install semua package yang dibutuhkan:
+## Install Dependency
 
 ```bash
 npm install
 ```
 
-Tunggu hingga proses selesai.
-
 ---
 
-# 🗄️ Setup Database 
+## Setup Database
+
+Jalankan Apache dan MySQL pada XAMPP.
+
+Buka phpMyAdmin:
+
+```txt
+http://localhost/phpmyadmin
+```
 
 Buat database baru dengan nama:
 
-```sql
-CREATE DATABASE spmb_db;
+```txt
+spmb_db
 ```
-
-Atau gunakan nama database lain sesuai kebutuhan.
 
 ---
 
-# ⚙️ Konfigurasi Environment
+## Konfigurasi Environment
 
-Buat file baru dengan nama:
+Buat file `.env` pada root project.
 
-```txt
-.env
-```
-
-Lalu isi seperti berikut:
+Isi dengan:
 
 ```env
-DATABASE_URL="postgresql://postgres:password@localhost:5432/spmb_db"
+DATABASE_URL="mysql://root:@localhost:3306/spmb_db"
 
-NEXTAUTH_SECRET="isi_dengan_secret_acak"
+NEXTAUTH_SECRET="isi_dengan_secret"
 
 NEXTAUTH_URL="http://localhost:3000"
 ```
 
-Sesuaikan:
-
-* username 
-* password 
-* nama 
+Sesuaikan jika username, password, atau nama database berbeda.
 
 ---
 
-# 🔄 Menjalankan Prisma Migration
+## Setup Prisma
 
 Generate Prisma Client:
 
@@ -128,19 +122,17 @@ Generate Prisma Client:
 npx prisma generate
 ```
 
-Jalankan:
+Sinkronkan database:
 
 ```bash
 npx prisma db push
 ```
 
-Jika berhasil maka seluruh tabel database akan dibuat otomatis.
+Jika berhasil, seluruh tabel akan dibuat secara otomatis.
 
 ---
 
-# ▶️ Menjalankan Project
-
-Mode Development:
+## Menjalankan Project
 
 ```bash
 npm run dev
@@ -154,11 +146,7 @@ http://localhost:3000
 
 ---
 
-#
-
-# 🔄 Mengambil Update Terbaru
-
-Jika repository sudah pernah di-clone:
+## Mengambil Update Terbaru
 
 ```bash
 git pull origin main
@@ -166,23 +154,31 @@ git pull origin main
 
 ---
 
-# 📤 Upload Perubahan ke GitHub
+## Upload Perubahan ke GitHub
 
-Setelah mengubah kode:
+Tambahkan perubahan:
 
 ```bash
 git add .
+```
 
+Commit:
+
+```bash
 git commit -m "Perubahan terbaru"
+```
 
+Push ke GitHub:
+
+```bash
 git push origin main
 ```
 
 ---
 
-# 📌 Perintah Git Yang Sering Digunakan
+## Perintah Git yang Sering Digunakan
 
-Melihat status file:
+Melihat status project:
 
 ```bash
 git status
@@ -202,21 +198,30 @@ git remote -v
 
 ---
 
-
-# 👨‍💻 Developer
+## Developer
 
 XI PPLG 1
+
 1. Chantique Putri
 2. Elang Saputra
 3. Indah Wardani
 4. Keisya Naila
-5. Yoni Al’fiani
+5. Yoni Al'fiani
 
 ---
 
-# 📄 Notes
 
+```txt
 admin@smkcitranegara.sch.id
-admin123
+```
 
-Project ini dibuat untuk kebutuhan Sistem Penerimaan Murid Baru (SPMB) dan Ujian Praktik.
+
+```txt
+admin123
+```
+
+---
+
+## Catatan
+
+Project ini dibuat untuk kebutuhan Sistem Penerimaan Murid Baru (SPMB) dan Ujian Praktik SMK Citra Negara.
