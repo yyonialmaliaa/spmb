@@ -12,19 +12,19 @@ const STATS = [
 
 const TUJUAN = [
   {
-    
+    icon: '🇮🇩',
     judul: 'Nasionalisme',
     deskripsi:
       'Melalui kegiatan Paskibra, siswa diajarkan mencintai tanah air dan menghormati simbol-simbol negara, khususnya bendera Merah Putih.',
   },
   {
-    
+    icon: '⭐',
     judul: 'Karakter Unggul',
     deskripsi:
       'Kedisiplinan, tanggung jawab, dan kerjasama adalah nilai-nilai utama yang ditanamkan dalam setiap sesi latihan dan penugasan.',
   },
   {
-   
+    icon: '🦅',
     judul: 'Jiwa Kepemimpinan',
     deskripsi:
       'Anggota Paskibra dilatih memiliki jiwa kepemimpinan dan keberanian dalam menghadapi berbagai tantangan nyata.',
