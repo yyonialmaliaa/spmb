@@ -33,9 +33,9 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }
 };
 
 const JURUSAN_LIST = [
-  { kode: 'PPLG', color: '#4F46E5' }, { kode: 'TJKT', color: '#0891B2' },
-  { kode: 'DKV',  color: '#D97706' }, { kode: 'MPLB', color: '#059669' },
-  { kode: 'PM',   color: '#DC2626' }, { kode: 'PH',   color: '#7C3AED' },
+  { kode: 'PPLG', color: '#1D4ED8' }, { kode: 'TJKT', color: '#4fcbeb' },
+  { kode: 'DKV',  color: '#D97706' }, { kode: 'MPLB', color: '#EAB308' },
+  { kode: 'PM',   color: '#e2c9ad' }, { kode: 'PH',   color: '#16A34A' },
 ];
 
 export default function AdminLaporan() {

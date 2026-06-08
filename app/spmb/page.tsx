@@ -5,14 +5,13 @@ import Footer from '@/components/layout/Footer';
 import { CheckCircle, FileText, Calendar, AlertCircle, ChevronRight } from 'lucide-react';
 
 const PERSYARATAN = [
-  'Ijazah/SKHUN SMP/MTs (asli + fotokopi)',
+  'Ijazah/SKHUN SMP/MTs (fotokopi)',
   'Kartu Keluarga (fotokopi)',
   'Akte Kelahiran (fotokopi)',
-  'Pas foto 3×4 berwarna (6 lembar)',
+  'KTP orang tua/wali (fotokopi)',
+  'Pas foto 3×4 berwarna (3 lembar)',
   'Surat keterangan sehat dari dokter',
-  'NISN (Nomor Induk Siswa Nasional)',
-  'NIK (Nomor Induk Kependudukan)',
-  'Sertifikat prestasi (jika ada)',
+  'Surat Keterangan Tidak Buta Warna (khusus jurusan TJKT, PPLG, dan DKV)',
 ];
 
 const ALUR = [
@@ -109,7 +108,7 @@ export default function SPMBPage() {
               <div className="gold-line" style={{ marginBottom: 16 }} />
               <h2 className="font-display" style={{ fontSize: 36, color: '#0A1628', marginBottom: 16 }}>Persyaratan Dokumen</h2>
               <p style={{ color: '#6B7280', marginBottom: 28, fontSize: 15, lineHeight: 1.7 }}>
-                Siapkan dokumen berikut dalam bentuk scan/foto yang jelas sebelum mengisi formulir pendaftaran.
+                Berikut adalah berkas persyaratan yang wajib diserahkan ke sekolah untuk proses verifikasi pendaftaran.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {PERSYARATAN.map((item, i) => (
@@ -122,7 +121,7 @@ export default function SPMBPage() {
               <div style={{ background: '#FEF3C7', border: '1px solid #FDE68A', borderRadius: 10, padding: 16, marginTop: 24, display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                 <AlertCircle size={16} color="#92400E" style={{ flexShrink: 0, marginTop: 2 }} />
                 <p style={{ fontSize: 13, color: '#92400E', lineHeight: 1.5 }}>
-                  Berkas fisik wajib diserahkan ke sekolah setelah submit formulir online, maksimal 3 hari kerja.
+                  Setelah mengirimkan formulir pendaftaran secara online, calon peserta didik wajib menyerahkan fotokopi berkas persyaratan ke sekolah paling lambat 3 (tiga) hari kerja.
                 </p>
               </div>
             </div>

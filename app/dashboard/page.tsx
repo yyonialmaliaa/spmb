@@ -7,6 +7,7 @@ import {
   LogOut, User, AlertCircle, Calendar, RefreshCw,
   Award, Bell, ChevronRight, Edit3
 } from 'lucide-react';
+import Image from 'next/image';
 
 type Pendaftaran = {
   id: string; namaLengkap: string; jurusan: string; asalSMP?: string; asalSekolah?: string;
@@ -28,10 +29,10 @@ const STATUS_CONFIG: Record<string, {
   pending:         { label: 'Menunggu Verifikasi', color: '#92400E', bg: '#FEF3C7', border: '#FDE68A',  icon: Clock,       step: 1, desc: 'Formulir sudah dikirim, menunggu admin memverifikasi berkas Anda.' },
   verified:        { label: 'Sedang Diverifikasi', color: '#1E40AF', bg: '#DBEAFE', border: '#BFDBFE',  icon: RefreshCw,   step: 2, desc: 'Admin sedang memeriksa berkas Anda. Harap tunggu.' },
   ditolak:         { label: 'Berkas Ditolak',      color: '#991B1B', bg: '#FEE2E2', border: '#FECACA',  icon: XCircle,     step: 1, desc: 'Admin menolak berkas Anda. Silakan perbaiki dan kirim ulang.' },
-  diterima_berkas: { label: 'Berkas Diterima',     color: '#065F46', bg: '#D1FAE5', border: '#A7F3D0',  icon: CheckCircle, step: 3, desc: 'Berkas diterima! Silakan datang ke sekolah untuk mengikuti tes seleksi.' },
-  tes:             { label: 'Jadwal Tes',           color: '#5B21B6', bg: '#EDE9FE', border: '#DDD6FE',  icon: Calendar,    step: 3, desc: 'Anda telah dijadwalkan untuk mengikuti tes seleksi di sekolah.' },
+  diterima_berkas: { label: 'Berkas Diterima',     color: '#065F46', bg: '#D1FAE5', border: '#A7F3D0',  icon: CheckCircle, step: 3, desc: 'Berkas diterima! Silakan datang ke sekolah untuk mengikuti tes seleksi, Informasi lebih lanjut akan disampaikan melalui email.' },
+  tes:             { label: 'Jadwal Tes',           color: '#5B21B6', bg: '#EDE9FE', border: '#DDD6FE',  icon: Calendar,    step: 3, desc: 'Anda telah dijadwalkan untuk mengikuti tes seleksi di sekolah, Silakan lihat email untuk informasi lebih lanjut.' },
   lulus:           { label: 'Diterima / Lulus',    color: '#065F46', bg: '#D1FAE5', border: '#A7F3D0',  icon: Award,       step: 4, desc: 'Selamat! Anda dinyatakan LULUS dan diterima di SMK Citra Negara!' },
-  tidak_lulus:     { label: 'Tidak Lulus',          color: '#991B1B', bg: '#FEE2E2', border: '#FECACA',  icon: XCircle,     step: 4, desc: 'Mohon maaf, Anda tidak lulus seleksi tahun ini.' },
+  tidak_lulus:     { label: 'Tidak Lulus',          color: '#991B1B', bg: '#FEE2E2', border: '#FECACA',  icon: XCircle,     step: 4, desc: 'Mohon maaf, Anda dinyatakan tidak lulus seleksi pada tahun ini. Terima kasih atas partisipasi Anda.' },
   daftar_ulang:    { label: 'Daftar Ulang Selesai', color: '#065F46', bg: '#D1FAE5', border: '#A7F3D0',  icon: CheckCircle, step: 5, desc: 'Selamat! Daftar ulang Anda telah dikonfirmasi. Sampai jumpa di sekolah!' },
 };
 
@@ -81,18 +82,37 @@ export default function DashboardPage() {
   const isDitolak   = pendaftaran?.status === 'ditolak';
   const isLulus     = pendaftaran?.status === 'lulus';
   const isTidakLulus = pendaftaran?.status === 'tidak_lulus';
-  const hasTes      = pendaftaran?.status === 'tes' || pendaftaran?.status === 'diterima_berkas';
+  const hasTes      = pendaftaran?.status === 'tes';
   const isDone      = isLulus || isTidakLulus || pendaftaran?.status === 'daftar_ulang';
   const isDaftarUlang = pendaftaran?.status === 'daftar_ulang';
 
   return (
     <div style={{ minHeight: '100vh', background: '#FAF7F0' }}>
-      <header style={{ background: '#0A1628', borderBottom: '2px solid #C8973A', padding: '0 24px' }}>
+      <header style={{ background: 'linear-gradient(180deg, #123524 0%, #0B2A1C 100%)', borderBottom: '2px solid #C8973A', padding: '0 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#C8973A,#E8B84B)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <GraduationCap size={18} color="#0A1628" />
-            </div>
+           
+            <div
+                          style={{
+                            width: 36,
+                            height: 36,
+                            borderRadius: 8,
+                            overflow: "hidden",
+                            position: "relative",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          <Image
+                            src="/images/logo.png"
+                            alt="Logo SMK Citra Negara"
+                            width={35}
+                            height={35}
+                            style={{ objectFit: "cover" }}
+                          />
+                        </div>
+            
             <span style={{ color: 'white', fontWeight: 700, fontSize: 14 }}>SMK Citra Negara</span>
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -111,7 +131,7 @@ export default function DashboardPage() {
 
       <main style={{ maxWidth: 1100, margin: '0 auto', padding: '36px 24px' }}>
         <div style={{ marginBottom: 32 }}>
-          <h1 className="font-display" style={{ fontSize: 30, color: '#0A1628', marginBottom: 4 }}>Halo, {session?.namaLengkap?.split(' ')[0]}! 👋</h1>
+          <h1 className="font-display" style={{ fontSize: 30, color: '#0B2A1C)', marginBottom: 4 }}>Halo, {session?.namaLengkap?.split(' ')[0]}! 👋</h1>
           <p style={{ color: '#6B7280', fontSize: 14 }}>Dashboard SPMB SMK Citra Negara</p>
         </div>
 
@@ -136,7 +156,7 @@ export default function DashboardPage() {
               {/* Status Card */}
               <div style={{ background: 'white', borderRadius: 16, padding: 28, border: '1px solid #F0EBE0' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0A1628' }}>Status Pendaftaran</h3>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0B2A1C' }}>Status Pendaftaran</h3>
                   {statusCfg && (
                     <span style={{ background: statusCfg.bg, color: statusCfg.color, border: `1px solid ${statusCfg.border}`, padding: '5px 14px', borderRadius: 20, fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
                       <statusCfg.icon size={13} /> {statusCfg.label}
@@ -192,8 +212,8 @@ export default function DashboardPage() {
               </div>
 
               {/* Jadwal Tes */}
-              {(hasTes || pendaftaran.jadwalTes) && (
-                <div style={{ background: '#0A1628', borderRadius: 16, padding: 28, color: 'white', border: '2px solid #C8973A' }}>
+              {hasTes && (
+                  <div style={{ background: '#1a4e35', borderRadius: 16, padding: 28, color: 'white', border: '2px solid #C8973A' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
                     <div style={{ width: 40, height: 40, background: 'rgba(200,151,58,0.2)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Bell size={20} color="#C8973A" />
@@ -224,7 +244,7 @@ export default function DashboardPage() {
 
               {/* Pengumuman Hasil */}
               {(isLulus || isTidakLulus || isDaftarUlang) && (
-                <div style={{ background: (isLulus || isDaftarUlang) ? 'linear-gradient(135deg,#065F46,#047857)' : 'linear-gradient(135deg,#991B1B,#B91C1C)', borderRadius: 16, padding: 32, color: 'white', textAlign: 'center' }}>
+                <div style={{ background: (isLulus || isDaftarUlang) ? 'linear-gradient(135deg,#1E3A8A,#3B82F6)' : 'linear-gradient(135deg,#991B1B,#B91C1C)', borderRadius: 16, padding: 32, color: 'white', textAlign: 'center' }}>
                   <div style={{ fontSize: 48, marginBottom: 16 }}>{(isLulus || isDaftarUlang) ? '🎉' : '😔'}</div>
                   <h2 className="font-display" style={{ fontSize: 26, color: 'white', marginBottom: 8 }}>
                     {isDaftarUlang ? 'Daftar Ulang Selesai!' : isLulus ? 'Selamat! Anda Diterima!' : 'Mohon Maaf'}
@@ -269,7 +289,7 @@ export default function DashboardPage() {
                         Harap datang ke sekolah untuk daftar ulang secara <strong>offline</strong> dengan membawa dokumen asli. Hubungi sekolah untuk informasi jadwal daftar ulang.
                       </p>
                       <div style={{ marginTop: 12, fontSize: 13, color: '#FEF3C7', fontWeight: 600 }}>
-                        📞 (021) 1234-5678
+                         0812-3456-7890 (WhatsApp)
                       </div>
                     </div>
                   )}
@@ -308,7 +328,7 @@ export default function DashboardPage() {
             {/* RIGHT */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {/* Tahapan */}
-              <div style={{ background: '#0A1628', borderRadius: 16, padding: 22, color: 'white' }}>
+              <div style={{ background: ' #083d1e', borderRadius: 16, padding: 22, color: 'white' }}>
                 <h4 style={{ fontSize: 14, fontWeight: 700, color: '#E8B84B', marginBottom: 16 }}>Tahapan Selanjutnya</h4>
                 {[
                   { step: 'Tunggu verifikasi dari admin', done: currentStep > 2 },
@@ -349,8 +369,9 @@ export default function DashboardPage() {
               <div style={{ background: 'white', borderRadius: 16, padding: 20, border: '1px solid #F0EBE0' }}>
                 <h4 style={{ fontSize: 14, fontWeight: 700, color: '#0A1628', marginBottom: 10 }}>Butuh Bantuan?</h4>
                 <p style={{ fontSize: 13, color: '#6B7280', lineHeight: 1.6, marginBottom: 12 }}>Hubungi kami jika ada pertanyaan seputar SPMB.</p>
-                <div style={{ fontSize: 13, color: '#C8973A', fontWeight: 600 }}>📞 (021) 1234-5678</div>
-                <div style={{ fontSize: 13, color: '#C8973A', fontWeight: 600, marginTop: 6 }}>✉️ spmb@smkcitranegara.sch.id</div>
+                <div style={{ fontSize: 13, color: '#C8973A', fontWeight: 600 }}>📞 (021) 7720-1052</div>
+                <div style={{ fontSize: 13, color: '#C8973A', fontWeight: 600, marginTop: 6}}>💬 0812-3456-7890 (WhatsApp)</div>
+                <div style={{ fontSize: 13, color: '#C8973A', fontWeight: 600, marginTop: 6 }}>📧 info@citranegara.sch.id</div>
               </div>
             </div>
           </div>

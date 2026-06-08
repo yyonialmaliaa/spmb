@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { GraduationCap, ChevronRight, ChevronLeft, CheckCircle, AlertCircle, Upload, X, Loader } from 'lucide-react';
+import Image from 'next/image';
 
 const JURUSAN_OPTIONS = [
   'Pengembangan Perangkat Lunak dan Gim (PPLG)',
@@ -18,6 +19,7 @@ const GOLDAR_OPTIONS = ['A', 'B', 'AB', 'O', 'Tidak Tahu'];
 const SERAGAM_OPTIONS = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 const PENDIDIKAN_OPTIONS = ['SD/MI', 'SMP/MTs', 'SMA/SMK', 'D1', 'D2', 'D3', 'S1', 'S2', 'S3'];
 const STEPS = ['Ketentuan', 'Data Pribadi', 'Data Orang Tua', 'Data Akademik', 'Upload Berkas', 'Konfirmasi'];
+
 
 type FormData = {
   namaLengkap: string; namaPanggilan: string;
@@ -62,6 +64,8 @@ export default function DaftarPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormData>(INITIAL);
+  const [seragamCustom, setSeragamCustom] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
   const [files, setFiles] = useState<FilesState>({
     ijazah: emptyFile(), akte: emptyFile(), kk: emptyFile(),
     ktpOrtu: emptyFile(), kip: emptyFile(), foto: emptyFile(),
@@ -70,10 +74,12 @@ export default function DaftarPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [authChecked, setAuthChecked] = useState(false);
+  
 
   useEffect(() => {
     fetch('/api/auth/me').then(r => r.json()).then(d => {
       if (!d.user) { router.push('/login'); return; }
+      setUserEmail(d.user.email || ''); 
       setAuthChecked(true);
     });
     fetch('/api/pendaftaran').then(r => r.json()).then(d => {
@@ -134,6 +140,7 @@ export default function DaftarPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
+          userEmail,
           ttl: `${form.tempatLahir}, ${form.tanggalLahir}`,
           namaOrtu: form.namaAyah || form.namaIbu || form.namaWali,
           noOrtu: form.noHpAyah || form.noHpIbu || form.noHpWali,
@@ -166,12 +173,29 @@ export default function DaftarPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#FAF7F0' }}>
-      <header style={{ background: '#0A1628', borderBottom: '2px solid #C8973A', padding: '0 24px' }}>
+      <header style={{ background: 'linear-gradient(180deg, #123524 0%, #0B2A1C 100%)', borderBottom: '2px solid #C8973A', padding: '0 24px' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', alignItems: 'center', height: 64 }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#C8973A,#E8B84B)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <GraduationCap size={18} color="#0A1628" />
-            </div>
+             <div
+                                     style={{
+                                       width: 36,
+                                       height: 36,
+                                       borderRadius: 8,
+                                       overflow: "hidden",
+                                       position: "relative",
+                                       display: 'flex',
+                                       alignItems: 'center',
+                                       justifyContent: 'center'
+                                     }}
+                                   >
+                                     <Image
+                                       src="/images/logo.png"
+                                       alt="Logo SMK Citra Negara"
+                                       width={35}
+                                       height={35}
+                                       style={{ objectFit: "cover" }}
+                                     />
+                                   </div>
             <span style={{ color: 'white', fontWeight: 700, fontSize: 14 }}>Formulir SPMB 2026 — SMK Citra Negara</span>
           </Link>
         </div>
@@ -203,23 +227,34 @@ export default function DaftarPage() {
 
           {/* STEP 0: KETENTUAN */}
           {step === 0 && (
-            <div>
-              <h2 className="font-display" style={{ fontSize: 22, color: '#0A1628', marginBottom: 6 }}>Ketentuan Pendaftaran</h2>
-              <p style={{ color: '#6B7280', fontSize: 13, marginBottom: 20 }}>Baca dan setujui ketentuan berikut sebelum melanjutkan</p>
-              <div style={{ background: '#F8F9FA', borderRadius: 12, padding: 24, marginBottom: 24, maxHeight: 380, overflowY: 'auto', border: '1px solid #E5E7EB' }}>
-                <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.8, marginBottom: 16 }}>Menyatakan bahwa saya sangat menyadari dalam penyelenggaraan pendidikan di sekolah swasta sangat membutuhkan dukungan besar dan partisipasinya dari orang tua/wali peserta didik, maka dari itu saya:</p>
-                {['Sepenuh hati mempercayakan kepada SMK Citra Negara untuk pendidikan, pengajaran dan pembinaan kepada anak kami.','Selama putra/putri saya menjadi peserta didik di SMK Citra Negara, saya mengizinkan untuk mengikuti seluruh agenda kegiatan.','Bersedia memenuhi kewajiban-kewajiban sebagai orang tua untuk kelancaran proses pendidikan yang dilaksanakan oleh SMK Citra Negara.','Bersedia dan sanggup memenuhi seluruh kewajiban atas pembayaran biaya pendidikan seperti: biaya PSB, SPP, biaya Ujian, Praktek Kerja Industri, kegiatan akhir tahun dan lain-lain.','Bersedia memenuhi seluruh biaya pendidikan secara tepat waktu demi kelancaran dan kesuksesan seluruh kegiatan di SMK Citra Negara.','Menyetujui jika kewajiban keuangan sekolah belum dilunasi, maka belum berhak atas administrasi penilaian anak saya.','Menyetujui apabila putra/putri saya membatalkan sekolah, maka seluruh biaya yang telah dibayarkan tidak dapat ditarik kembali.','Pembayaran administrasi PPDB harus lunas per gelombang.','Menerima peraturan bahwa selama masih mengangsur biaya PSB statusnya cadangan.'].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 10, alignItems: 'flex-start' }}>
-                    <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#0A1628', color: 'white', fontSize: 10, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>{i + 1}</div>
-                    <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.7, margin: 0 }}>{item}</p>
-                  </div>
-                ))}
-              </div>
-              <label style={{ display: 'flex', alignItems: 'flex-start', gap: 12, cursor: 'pointer', padding: '14px 16px', background: setuju ? '#F0FDF4' : '#FFFBEB', borderRadius: 10, border: `1.5px solid ${setuju ? '#86EFAC' : '#FDE68A'}` }}>
-                <input type="checkbox" checked={setuju} onChange={e => setSetuju(e.target.checked)} style={{ width: 18, height: 18, marginTop: 1, accentColor: '#C8973A' }} />
-                <span style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>Saya telah membaca, memahami, dan <strong>menyetujui</strong> seluruh ketentuan pendaftaran di atas.</span>
-              </label>
-            </div>
+           <div>
+  <h2 className="font-display" style={{ fontSize: 22, color: '#0A1628', marginBottom: 6 }}>Ketentuan Pendaftaran</h2>
+  <p style={{ color: '#6B7280', fontSize: 13, marginBottom: 20 }}>Baca dan setujui ketentuan berikut sebelum melanjutkan</p>
+  <div style={{ background: '#F8F9FA', borderRadius: 12, padding: 24, marginBottom: 24, maxHeight: 380, overflowY: 'auto', border: '1px solid #E5E7EB' }}>
+    <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.8, marginBottom: 16 }}>Menyatakan bahwa saya sangat menyadari dalam penyelenggaraan pendidikan di sekolah swasta sangat membutuhkan dukungan besar dan partisipasinya dari orang tua/wali peserta didik, maka dari itu saya:</p>
+    {[
+      'Sepenuh hati mempercayakan kepada SMK Citra Negara untuk memberikan pendidikan, pengajaran, dan pembinaan kepada putra/putri kami.',
+      'Selama putra/putri saya menjadi peserta didik di SMK Citra Negara, saya mengizinkan untuk mengikuti seluruh agenda kegiatan yang diselenggarakan oleh sekolah.',
+      'Bersedia memenuhi kewajiban-kewajiban sebagai orang tua/wali demi kelancaran proses pendidikan, pengajaran, dan pembinaan yang dilaksanakan oleh SMK Citra Negara.',
+      'Bersedia dan sanggup memenuhi seluruh kewajiban pembayaran biaya pendidikan, seperti biaya PPDB, SPP, biaya Penilaian Tengah Semester (PTS), Penilaian Akhir Semester (PAS), Praktik Kerja Lapangan (PKL), kegiatan akhir tahun, dan biaya lainnya yang telah ditetapkan oleh Yayasan At-Taqwa Kemiri Jaya.',
+      'Bersedia memenuhi seluruh biaya pendidikan secara tepat waktu demi kelancaran dan keberhasilan seluruh kegiatan di SMK Citra Negara, yaitu setiap tanggal 5 sampai dengan 10 setiap bulannya.',
+      'Menyetujui bahwa apabila kewajiban yang berkaitan dengan keuangan sekolah belum dilunasi seluruhnya, maka saya belum berhak memperoleh administrasi penilaian putra/putri saya.',
+      `Menyetujui bahwa apabila putra/putri saya membatalkan sekolah di SMK Citra Negara Tahun Pelajaran 2026/2027, maka seluruh biaya pendidikan yang telah dibayarkan tidak dapat ditarik kembali dengan alasan apa pun. Khusus bagi peserta didik yang diterima di sekolah negeri, biaya dapat dikembalikan sebesar 50% dengan ketentuan:<ul style="margin-top:8px;padding-left:20px;list-style-type:disc;display:flex;flex-direction:column;gap:4px;"><li>Minimal telah melakukan pembayaran sebesar Rp1.000.000;</li><li>Menyerahkan surat keterangan diterima di sekolah negeri;</li><li>Dibuktikan melalui Website Resmi PPDB Online dari dinas terkait;</li><li>Pengajuan dilakukan maksimal 3 (tiga) hari setelah pengumuman penerimaan sekolah negeri.</li></ul>`,
+      'Pembayaran administrasi keuangan PPDB harus dilunasi sesuai gelombang pendaftaran. Apabila belum dilunasi, maka akan dikenakan biaya PPDB sesuai gelombang berikutnya.',
+      'Menyetujui dan menerima ketentuan bahwa selama biaya PPDB masih dalam proses angsuran, status pendaftaran bersifat cadangan dan dapat tergeser oleh calon peserta didik yang telah melunasi pembayaran. Apabila sampai bulan Juli Tahun Pelajaran 2026/2027 belum melunasi seluruh pembiayaan, maka biaya akan berlaku normal tanpa potongan (diskon).',
+      'Bersedia menerima hasil Tes dan seleksi administrasi keuangan, serta menerima segala keputusan yang ditetapkan oleh pihak SMK Citra Negara sebagai hasil akhir proses seleksi.',
+    ].map((item, i) => (
+      <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 10, alignItems: 'flex-start' }}>
+        <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#0A1628', color: 'white', fontSize: 10, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>{i + 1}</div>
+        <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.7, margin: 0 }} dangerouslySetInnerHTML={{ __html: item }} />
+      </div>
+    ))}
+  </div>
+  <label style={{ display: 'flex', alignItems: 'flex-start', gap: 12, cursor: 'pointer', padding: '14px 16px', background: setuju ? '#F0FDF4' : '#FFFBEB', borderRadius: 10, border: `1.5px solid ${setuju ? '#86EFAC' : '#FDE68A'}` }}>
+    <input type="checkbox" checked={setuju} onChange={e => setSetuju(e.target.checked)} style={{ width: 18, height: 18, marginTop: 1, accentColor: '#C8973A' }} />
+    <span style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>Saya telah membaca, memahami, dan <strong>menyetujui</strong> seluruh ketentuan pendaftaran di atas.</span>
+  </label>
+</div>
           )}
 
           {/* STEP 1: DATA PRIBADI */}
@@ -240,8 +275,8 @@ export default function DaftarPage() {
                   <div><label style={lbl}>Nama Panggilan</label><input style={inp} value={form.namaPanggilan} onChange={set('namaPanggilan')} placeholder="Nama sehari-hari" onFocus={onFocus} onBlur={onBlur} /></div>
                 </div>
                 <div style={grid2}>
-                  <div><label style={lbl}>NISN</label><input style={inp} value={form.nisn} onChange={set('nisn')} placeholder="10 digit NISN" maxLength={10} onFocus={onFocus} onBlur={onBlur} /></div>
-                  <div><label style={lbl}>No. HP Pribadi</label><input style={inp} type="tel" value={form.noPribadi} onChange={set('noPribadi')} placeholder="08xxxxxxxxxx" onFocus={onFocus} onBlur={onBlur} /></div>
+                  <div><label style={lbl}>NISN</label><input style={inp} value={form.nisn} onChange={e => { const val = e.target.value.replace(/\D/g, ''); set('nisn')({ ...e, target: { ...e.target, value: val } }); }} placeholder="10 digit NISN" maxLength={10} onFocus={onFocus} onBlur={onBlur} /></div>
+                  <div><label style={lbl}>No. HP Pribadi</label><input style={inp} type="tel" value={form.noPribadi} onChange={e => { const val = e.target.value.replace(/[^\d\s+]/g, ''); set('noPribadi')({ ...e, target: { ...e.target, value: val } }); }} placeholder="08xxxxxxxxxx" onFocus={onFocus} onBlur={onBlur} /></div>
                 </div>
                 <div style={grid2}>
                   <div><label style={lbl}>Jenis Kelamin *</label>
@@ -257,28 +292,33 @@ export default function DaftarPage() {
                   </div>
                 </div>
                 <div style={grid2}>
-                  <div><label style={lbl}>Tempat Lahir *</label><input style={inp} value={form.tempatLahir} onChange={set('tempatLahir')} placeholder="Kota tempat lahir" onFocus={onFocus} onBlur={onBlur} /></div>
+                  <div><label style={lbl}>Tempat Lahir *</label><input style={inp} value={form.tempatLahir} onChange={e => { const val = e.target.value.replace(/[^a-zA-Z\s]/g, ''); set('tempatLahir')({ ...e, target: { ...e.target, value: val } }); }} placeholder="Kota tempat lahir" onFocus={onFocus} onBlur={onBlur} /></div>
                   <div><label style={lbl}>Tanggal Lahir *</label><input style={inp} type="date" value={form.tanggalLahir} onChange={set('tanggalLahir')} onFocus={onFocus} onBlur={onBlur} /></div>
                 </div>
                 <div style={grid3}>
                   <div><label style={lbl}>Anak Ke-</label><input style={inp} type="number" value={form.anakKe} onChange={set('anakKe')} placeholder="1" onFocus={onFocus} onBlur={onBlur} /></div>
-                  <div><label style={lbl}>NIK</label><input style={inp} value={form.nik} onChange={set('nik')} placeholder="16 digit NIK" maxLength={16} onFocus={onFocus} onBlur={onBlur} /></div>
-                  <div><label style={lbl}>Ukuran Seragam</label>
-                    <select style={inp} value={form.ukuranSeragam} onChange={set('ukuranSeragam')} onFocus={onFocus} onBlur={onBlur}>
-                      <option value="">Pilih...</option>{SERAGAM_OPTIONS.map(s => <option key={s}>{s}</option>)}
+                  <div><label style={lbl}>NIK</label><input style={inp} value={form.nik} onChange={e => { const val = e.target.value.replace(/\D/g, ''); set('nik')({ ...e, target: { ...e.target, value: val } }); }} placeholder="16 digit NIK" maxLength={16} onFocus={onFocus} onBlur={onBlur} /></div>
+                 <div><label style={lbl}>Ukuran Seragam</label>
+                    <select style={inp} value={seragamCustom ? 'custom' : form.ukuranSeragam} onChange={e => { if (e.target.value === 'custom') { setSeragamCustom(true); set('ukuranSeragam')({ ...e, target: { ...e.target, value: '' } }); } else { setSeragamCustom(false); set('ukuranSeragam')(e); } }} onFocus={onFocus} onBlur={onBlur}>
+                      <option value="">Pilih...</option>
+                      {SERAGAM_OPTIONS.map(s => <option key={s}>{s}</option>)}
+                      <option value="custom">Lainnya (isi manual)...</option>
                     </select>
+                    {seragamCustom && (
+                      <input style={{ ...inp, marginTop: 8 }} value={form.ukuranSeragam} onChange={set('ukuranSeragam')} placeholder="Masukkan Ukuran" onFocus={onFocus} onBlur={onBlur} />
+                    )}
                   </div>
                 </div>
                 <div><label style={lbl}>Alamat *</label><input style={inp} value={form.alamat} onChange={set('alamat')} placeholder="Nama jalan dan nomor" onFocus={onFocus} onBlur={onBlur} /></div>
                 <div style={grid3}>
-                  <div><label style={lbl}>RT</label><input style={inp} value={form.rt} onChange={set('rt')} placeholder="001" onFocus={onFocus} onBlur={onBlur} /></div>
-                  <div><label style={lbl}>RW</label><input style={inp} value={form.rw} onChange={set('rw')} placeholder="001" onFocus={onFocus} onBlur={onBlur} /></div>
-                  <div><label style={lbl}>Kelurahan</label><input style={inp} value={form.kelurahan} onChange={set('kelurahan')} placeholder="Kelurahan" onFocus={onFocus} onBlur={onBlur} /></div>
-                </div>
-                <div style={grid2}>
-                  <div><label style={lbl}>Kecamatan</label><input style={inp} value={form.kecamatan} onChange={set('kecamatan')} placeholder="Kecamatan" onFocus={onFocus} onBlur={onBlur} /></div>
-                  <div><label style={lbl}>Kabupaten / Kota</label><input style={inp} value={form.kabupaten} onChange={set('kabupaten')} placeholder="Kabupaten/Kota" onFocus={onFocus} onBlur={onBlur} /></div>
-                </div>
+  <div><label style={lbl}>RT</label><input style={inp} value={form.rt} onChange={e => { const val = e.target.value.replace(/\D/g, ''); set('rt')({ ...e, target: { ...e.target, value: val } }); }} placeholder="001" onFocus={onFocus} onBlur={onBlur} /></div>
+  <div><label style={lbl}>RW</label><input style={inp} value={form.rw} onChange={e => { const val = e.target.value.replace(/\D/g, ''); set('rw')({ ...e, target: { ...e.target, value: val } }); }} placeholder="001" onFocus={onFocus} onBlur={onBlur} /></div>
+  <div><label style={lbl}>Kelurahan</label><input style={inp} value={form.kelurahan} onChange={e => { const val = e.target.value.replace(/[^a-zA-Z\s]/g, ''); set('kelurahan')({ ...e, target: { ...e.target, value: val } }); }} placeholder="Kelurahan" onFocus={onFocus} onBlur={onBlur} /></div>
+</div>
+<div style={grid2}>
+  <div><label style={lbl}>Kecamatan</label><input style={inp} value={form.kecamatan} onChange={e => { const val = e.target.value.replace(/[^a-zA-Z\s]/g, ''); set('kecamatan')({ ...e, target: { ...e.target, value: val } }); }} placeholder="Kecamatan" onFocus={onFocus} onBlur={onBlur} /></div>
+  <div><label style={lbl}>Kabupaten / Kota</label><input style={inp} value={form.kabupaten} onChange={e => { const val = e.target.value.replace(/[^a-zA-Z\s]/g, ''); set('kabupaten')({ ...e, target: { ...e.target, value: val } }); }} placeholder="Kabupaten/Kota" onFocus={onFocus} onBlur={onBlur} /></div>
+</div>
                 <div style={grid3}>
                   <div><label style={lbl}>Berat Badan (kg)</label><input style={inp} type="number" value={form.beratBadan} onChange={set('beratBadan')} placeholder="Kg" onFocus={onFocus} onBlur={onBlur} /></div>
                   <div><label style={lbl}>Tinggi Badan (cm)</label><input style={inp} type="number" value={form.tinggiBadan} onChange={set('tinggiBadan')} placeholder="Cm" onFocus={onFocus} onBlur={onBlur} /></div>
@@ -299,52 +339,62 @@ export default function DaftarPage() {
             </div>
           )}
 
-          {/* STEP 2: DATA ORANG TUA */}
-          {step === 2 && (
-            <div>
-              <h2 className="font-display" style={{ fontSize: 22, color: '#0A1628', marginBottom: 6 }}>Data Orang Tua Kandung / Wali</h2>
-              <p style={{ color: '#6B7280', fontSize: 13, marginBottom: 24 }}>Isi data orang tua atau wali calon peserta didik</p>
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
-                  <thead>
-                    <tr>
-                      <th style={{ padding: '10px 12px', background: '#F8F9FA', border: '1px solid #E5E7EB', fontSize: 12, fontWeight: 700, color: '#374151', textAlign: 'left', width: 150 }}>Data</th>
-                      {['Ayah','Ibu','Wali'].map(col => (
-                        <th key={col} style={{ padding: '10px 12px', background: col==='Ayah'?'#EFF6FF':col==='Ibu'?'#FDF2F8':'#F0FDF4', border: '1px solid #E5E7EB', fontSize: 12, fontWeight: 700, color: '#374151', textAlign: 'center' }}>{col}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[
-                      { label:'Nama', keys:['namaAyah','namaIbu','namaWali'] as const, ph:'Nama lengkap' },
-                      { label:'Tempat, Tgl Lahir', keys:['ttlAyah','ttlIbu','ttlWali'] as const, ph:'Bandung, 17 Juni 1980' },
-                      { label:'Pendidikan', keys:['pendidikanAyah','pendidikanIbu','pendidikanWali'] as const, ph:'S1', isSelect:true },
-                      { label:'Pekerjaan', keys:['pekerjaanAyah','pekerjaanIbu','pekerjaanWali'] as const, ph:'Pekerjaan' },
-                      { label:'Penghasilan/bulan', keys:['penghasilanAyah','penghasilanIbu','penghasilanWali'] as const, ph:'Rp' },
-                      { label:'No. Handphone', keys:['noHpAyah','noHpIbu','noHpWali'] as const, ph:'08xx' },
-                      { label:'Alamat', keys:['alamatAyah','alamatIbu','alamatWali'] as const, ph:'Alamat' },
-                    ].map(row => (
-                      <tr key={row.label}>
-                        <td style={{ padding:'7px 12px', border:'1px solid #E5E7EB', fontSize:12, fontWeight:600, color:'#374151', background:'#FAFAFA' }}>{row.label}</td>
-                        {row.keys.map(k => (
-                          <td key={k} style={{ padding:'5px 7px', border:'1px solid #E5E7EB' }}>
-                            {row.isSelect ? (
-                              <select style={{ ...inp, fontSize:12 }} value={form[k]} onChange={set(k)} onFocus={onFocus} onBlur={onBlur}>
-                                <option value="">Pilih...</option>
-                                {PENDIDIKAN_OPTIONS.map(p => <option key={p}>{p}</option>)}
-                              </select>
-                            ) : (
-                              <input style={{ ...inp, fontSize:12 }} value={form[k]} onChange={set(k)} placeholder={row.ph} onFocus={onFocus} onBlur={onBlur} />
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+         {/* STEP 2: DATA ORANG TUA */}
+{step === 2 && (
+  <div>
+    <h2 className="font-display" style={{ fontSize: 22, color: '#0A1628', marginBottom: 6 }}>Data Orang Tua Kandung / Wali</h2>
+    <p style={{ color: '#6B7280', fontSize: 13, marginBottom: 24 }}>Isi data orang tua atau wali calon peserta didik</p>
+    <div style={{ overflowX: 'auto' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
+        <thead>
+          <tr>
+            <th style={{ padding: '10px 12px', background: '#F8F9FA', border: '1px solid #E5E7EB', fontSize: 12, fontWeight: 700, color: '#374151', textAlign: 'left', width: 150 }}>Data</th>
+            {['Ayah','Ibu','Wali'].map(col => (
+              <th key={col} style={{ padding: '10px 12px', background: col==='Ayah'?'#EFF6FF':col==='Ibu'?'#FDF2F8':'#F0FDF4', border: '1px solid #E5E7EB', fontSize: 12, fontWeight: 700, color: '#374151', textAlign: 'center' }}>{col}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            { label:'Nama', keys:['namaAyah','namaIbu','namaWali'] as const, ph:'Nama lengkap', filter:(v:string) => v.replace(/[^a-zA-Z\s]/g, '') },
+            { label:'Tempat, Tgl Lahir', keys:['ttlAyah','ttlIbu','ttlWali'] as const, ph:'Bandung, 17 Juni 1980' },
+            { label:'Pendidikan', keys:['pendidikanAyah','pendidikanIbu','pendidikanWali'] as const, ph:'S1', isSelect:true },
+            { label:'Pekerjaan', keys:['pekerjaanAyah','pekerjaanIbu','pekerjaanWali'] as const, ph:'Pekerjaan', filter:(v:string) => v.replace(/[^a-zA-Z\s]/g, '') },
+            { label:'Penghasilan/bulan', keys:['penghasilanAyah','penghasilanIbu','penghasilanWali'] as const, ph:'Rp', filter:(v:string) => v.replace(/[^a-zA-Z0-9,\.]/g, '') },
+            { label:'No. Handphone', keys:['noHpAyah','noHpIbu','noHpWali'] as const, ph:'08xx', filter:(v:string) => v.replace(/[^\d\s+]/g, '') },
+            { label:'Alamat', keys:['alamatAyah','alamatIbu','alamatWali'] as const, ph:'Alamat' },
+          ].map(row => (
+            <tr key={row.label}>
+              <td style={{ padding:'7px 12px', border:'1px solid #E5E7EB', fontSize:12, fontWeight:600, color:'#374151', background:'#FAFAFA' }}>{row.label}</td>
+              {row.keys.map(k => (
+                <td key={k} style={{ padding:'5px 7px', border:'1px solid #E5E7EB' }}>
+                  {row.isSelect ? (
+                    <select style={{ ...inp, fontSize:12 }} value={form[k]} onChange={set(k)} onFocus={onFocus} onBlur={onBlur}>
+                      <option value="">Pilih...</option>
+                      {PENDIDIKAN_OPTIONS.map(p => <option key={p}>{p}</option>)}
+                    </select>
+                  ) : (
+                    <input
+                      style={{ ...inp, fontSize:12 }}
+                      value={form[k]}
+                      onChange={e => {
+                        const val = row.filter ? row.filter(e.target.value) : e.target.value;
+                        set(k)({ ...e, target: { ...e.target, value: val } });
+                      }}
+                      placeholder={row.ph}
+                      onFocus={onFocus}
+                      onBlur={onBlur}
+                    />
+                  )}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
 
           {/* STEP 3: DATA AKADEMIK */}
           {step === 3 && (
@@ -355,7 +405,7 @@ export default function DaftarPage() {
                 <div><label style={lbl}>Asal SD/MI</label><input style={inp} value={form.asalSD} onChange={set('asalSD')} placeholder="Nama SD/MI asal" onFocus={onFocus} onBlur={onBlur} /></div>
                 <div><label style={lbl}>Asal SMP/MTs *</label><input style={inp} value={form.asalSMP} onChange={set('asalSMP')} placeholder="Nama SMP/MTs asal" onFocus={onFocus} onBlur={onBlur} /></div>
                 <div style={{ background: '#F0F9FF', borderRadius: 8, padding: 14, border: '1px solid #BAE6FD' }}>
-                  <p style={{ fontSize: 12, color: '#0369A1', lineHeight: 1.6 }}>💡 Upload berkas fisik akan dilakukan di langkah berikutnya. Berkas asli harap dibawa ke sekolah dalam 3 hari kerja.</p>
+                  <p style={{ fontSize: 12, color: '#0369A1', lineHeight: 1.6 }}>💡 Upload berkas fisik akan dilakukan di langkah berikutnya. </p>
                 </div>
               </div>
             </div>

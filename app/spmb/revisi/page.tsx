@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { GraduationCap, AlertCircle, CheckCircle, Upload, X, Loader, ArrowLeft } from 'lucide-react';
+import Image from 'next/image';
 
 type Pendaftaran = {
   namaLengkap: string; jurusan: string; alasanPenolakan?: string; catatan?: string;
@@ -132,16 +133,34 @@ export default function RevisiPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#FAF7F0' }}>
-      <header style={{ background: '#0A1628', borderBottom: '2px solid #C8973A', padding: '0 24px' }}>
+      <header style={{ background: 'linear-gradient(180deg, #123524 0%, #0B2A1C 100%)', borderBottom: '2px solid #C8973A', padding: '0 24px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto', display: 'flex', alignItems: 'center', height: 64, gap: 16 }}>
           <Link href="/dashboard" style={{ color: 'rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', fontSize: 13 }}>
             <ArrowLeft size={16} /> Kembali
           </Link>
           <div style={{ width: 1, height: 24, background: 'rgba(255,255,255,0.2)' }} />
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg,#C8973A,#E8B84B)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <GraduationCap size={16} color="#0A1628" />
-            </div>
+            <div
+                                      style={{
+                                        width: 36,
+                                        height: 36,
+                                        borderRadius: 8,
+                                        overflow: "hidden",
+                                        position: "relative",
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                      }}
+                                    >
+                                      <Image
+                                        src="/images/logo.png"
+                                        alt="Logo SMK Citra Negara"
+                                        width={35}
+                                        height={35}
+                                        style={{ objectFit: "cover" }}
+                                      />
+                                    </div>
+            
             <span style={{ color: 'white', fontWeight: 700, fontSize: 14 }}>Revisi Berkas SPMB</span>
           </div>
         </div>

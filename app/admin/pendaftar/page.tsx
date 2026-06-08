@@ -410,7 +410,12 @@ export default function AdminPendaftar() {
                     <div style={{ width: 56, height: 56, borderRadius: 12, background: `${getJurusanColor(selected.jurusan)}20`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 800, color: getJurusanColor(selected.jurusan) }}>{getInitials(selected.namaLengkap)}</div>
                     <div>
                       <div style={{ fontSize: 16, fontWeight: 800, color: '#0A1628' }}>{selected.namaLengkap}</div>
-                      <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 5 }}>{selected.jurusan}</div>
+                      <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 2 }}>{selected.jurusan}</div>
+                      {selected.userEmail && (
+                        <div style={{ fontSize: 11, color: '#6B7280', marginBottom: 7 }}>
+                           {selected.userEmail}
+                        </div>
+                      )}
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                         {(() => { const sc = STATUS_CONFIG[selected.status] || STATUS_CONFIG['pending']; return <span style={{ background: sc.bg, color: sc.color, padding: '2px 10px', borderRadius: 10, fontSize: 11, fontWeight: 700 }}>{sc.label}</span>; })()}
                         {(selected.revisiCount || 0) > 0 && <span style={{ fontSize: 11, color: '#EA580C', background: '#FFF7ED', padding: '2px 8px', borderRadius: 10, fontWeight: 600 }}>Revisi {selected.revisiCount}x</span>}

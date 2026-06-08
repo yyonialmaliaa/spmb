@@ -191,8 +191,8 @@ export default function Footer() {
             <h4 style={{ fontWeight: 700, marginBottom: 16, fontSize: 14, color: '#C8973A' }}>Kontak</h4>
             {[
               { Icon: MapPin, text: 'Jl. Tanah Baru Jl. Kemiri Jaya No.99, Beji, Kecamatan Beji, Kota Depok, Jawa Barat 16421' },
-              { Icon: Phone, text: '(021) 1234-5678 / WA: 0813-2526-9477' },
-              { Icon: Mail, text: 'info@smkcitranegara.sch.id' },
+              { Icon: Phone, text: '(021) 7720-1052 / WA: 0813-2526-9477' },
+              { Icon: Mail, text: 'info@citranegara.sch.id' },
               { Icon: Clock12Icon, text: 'Senin - Jumat: 07:00 - 15:30 | Sabtu - Minggu: 07:00 - 13:00' },
             ].map(({ Icon, text }, i) => (
               <div key={i} style={{ display: 'flex', gap: 10, marginBottom: 12, alignItems: 'flex-start' }}>

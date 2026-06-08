@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { GraduationCap, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
+import Image from 'next/image';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -46,13 +47,24 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0A1628', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+    <div style={{ minHeight: '100vh', background: '#032511', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <div style={{ width: '100%', maxWidth: 480 }}>
         <div style={{ textAlign: 'center', marginBottom: 36 }}>
           <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}>
-            <div style={{ width: 52, height: 52, background: 'linear-gradient(135deg,#C8973A,#E8B84B)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <GraduationCap size={28} color="#0A1628" />
-            </div>
+            <div style={{
+                                      width: 52, height: 52,
+                                      borderRadius: 10,
+                                      overflow: 'hidden',
+                                      position: 'relative',
+                                    }}>
+                                      <Image
+                                        src="/images/logo.png"
+                                        alt="Logo SMK Citra Negara"
+                                        width={52}
+                                        height={52}
+                                        style={{ objectFit: 'cover' }}
+                                      />
+                                    </div>
             <div style={{ textAlign: 'left' }}>
               <div style={{ color: 'white', fontWeight: 800, fontSize: 18 }}>SMK Citra Negara</div>
               <div style={{ color: '#C8973A', fontSize: 12 }}>Registrasi SPMB</div>
